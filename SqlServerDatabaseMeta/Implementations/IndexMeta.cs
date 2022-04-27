@@ -5,13 +5,11 @@
 
     internal sealed class IndexMeta : MetaBase, IIndexMeta
     {
-        private readonly List<IColumnMeta> _columns;
-
         public ITableMeta Table { get; }
 
         public int IndexId { get; }
 
-        public IReadOnlyList<IColumnMeta> Columns => _columns.AsReadOnly();
+        public IReadOnlyList<IColumnMeta> Columns { get; }
 
         public IndexType Properties { get; }
 
@@ -19,7 +17,7 @@
         {
             this.Table = table;
             this.IndexId = indexId;
-            _columns = columns;
+            this.Columns = columns.AsReadOnly();
             this.Properties = GetPropertyFlags(propertyTags);
         }
 

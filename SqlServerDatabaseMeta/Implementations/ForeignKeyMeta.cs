@@ -5,15 +5,13 @@
 
     internal sealed class ForeignKeyMeta : MetaBase, IForeignKeyMeta
     {
-        private readonly List<IColumnMeta> _sourceColumns;
-
         private readonly int _targetTableIndexId;
 
         private readonly List<ForeignKeyColumnReferenceIndexes> _columnReferenceIndexes;
 
         public ITableMeta SourceTable => this.SourceColumns.First().Table;
 
-        public IReadOnlyList<IColumnMeta> SourceColumns => _sourceColumns.AsReadOnly();
+        public IReadOnlyList<IColumnMeta> SourceColumns { get; }
 
         public ITableMeta TargetTable { get; }
 
@@ -23,7 +21,7 @@
 
         internal ForeignKeyMeta(string name, string description, List<IColumnMeta> sourceColumns, ITableMeta targetTable, int targetTableIndexId, List<ForeignKeyColumnReferenceIndexes> columnReferences) : base(name, description)
         {
-            _sourceColumns = sourceColumns;
+            this.SourceColumns = sourceColumns.AsReadOnly();
             this.TargetTable = targetTable;
             _targetTableIndexId = targetTableIndexId;
             _columnReferenceIndexes = columnReferences;
