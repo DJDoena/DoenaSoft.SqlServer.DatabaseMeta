@@ -10,7 +10,7 @@ on:
 env:
   SOURCE_URL: https://api.nuget.org/v3/index.json
   PROJECT_FILE: SqlServerDatabaseMeta.csproj
-  PROJECT_FOLDER: DoenaSoft.SqlServerDatabaseMeta
+  PROJECT_FOLDER: SqlServerDatabaseMeta
   
 jobs:
   build:
