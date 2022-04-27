@@ -1,0 +1,626 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DoenaSoft.SqlServerDatabaseMeta</name>
+    </assembly>
+    <members>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.ICheckMeta">
+            <summary>
+            Represents a check constraint on a <see cref="T:DoenaSoft.SqlServerDatabaseMeta.ITableMeta">table</see>.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ICheckMeta.Table">
+            <summary>
+            The table this check is implemented on.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ICheckMeta.Check">
+            <summary>
+            The SQL text the check is executing.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta">
+            <summary>
+            Represents a column in a user table / user view.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.Table">
+            <summary>
+            The table this column belongs to.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.TableType">
+            <summary>
+            Table or view.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.Index">
+            <summary>
+            The ordinal position within the table.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.ColumnId">
+            <summary>
+            The internal database meta Id of the column.
+            </summary>
+            <remarks>
+            Is only set when the <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.TableType"/> is <see cref="F:DoenaSoft.SqlServerDatabaseMeta.TableType.Table"/>.
+            Can be but isn't necessarily identical with the <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.Index"/>.
+            Unlike the <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IMetaBase.MetaId"/> this Id originates from the underlying database.
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.SqlDataType">
+            <summary>
+            The data type as defined in the underlying database.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.NetDataType">
+            <summary>
+            The .Net datatype that a tool like EntityFramework would generate for this column's value.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.DefaultValue">
+            <summary>
+            Default value of the field when the column's value is not explicitly specified during INSERT.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.IsNullable">
+            <summary>
+            Whether or not NULL is a valid field value.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.IsIdentity">
+            <summary>
+            If the field auto-increments.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.NumericPrecision">
+            <summary>
+            Size of the whole part of a floating-point number.
+            </summary>
+            <remarks>
+            The field is only used when the column is of any numeric <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.SqlDataType">data type</see> (e.g. int, float, etc.).
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.NumericScale">
+            <summary>
+            Size of the fraction part of a floating-point number.
+            </summary>
+            <remarks>
+            The field is only used when the column is of any numeric <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.SqlDataType">data type</see> (e.g. int, float, etc.).
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.MaxTextLength">
+            <summary>
+            Maximum number of characters that can be entered into a text field.
+            </summary>
+            <remarks>
+            When a database type like nvarchar (or any other n*) is used, the needed storage space can exceed that of the defined characters which is due to the way UTF-8 stores its data.
+            The field is only used when the column is of any text <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.SqlDataType">data type</see> (e.g. nchar, varchar, etc.).
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.TextCollation">
+            <summary>
+            The sorting / search collation for this text field
+            </summary>
+            <remarks>
+            <a href="https://www.red-gate.com/simple-talk/databases/sql-server/t-sql-programming-sql-server/questions-sql-server-collations-shy-ask/#post-70501-_Toc479001442">What is a SQL Server collation?</a>
+            The field is only used when the column is of any text <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.SqlDataType">data type</see> (e.g. nchar, varchar, etc.).
+            </remarks>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyColumnReference">
+            <summary>
+            Represents a from-to relation from a source <see cref="T:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta">column</see> to a target column in a <see cref="T:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta">foreign key</see>.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyColumnReference.SourceColumn">
+            <summary>
+            The source column.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyColumnReference.TargetColumn">
+            <summary>
+            The target column.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta">
+            <summary>
+            Represents a foreign key from one <see cref="T:DoenaSoft.SqlServerDatabaseMeta.ITableMeta">table</see> to a primary key or a unique key of another (or the same) table.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.SourceTable">
+            <summary>
+            The table from which the foreign key relation starts.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.SourceColumns">
+            <summary>
+            The column(s) in the source table.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.TargetTable">
+            <summary>
+            The table to which the foreign key relation points.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.TargetIndex">
+            <summary>
+            While configuring a foreign key, one points one (or more) <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.SourceColumns">source columns</see> to one (or more) target columns.
+            However the target columns must either be represented by a primary or unique key in the target table and are represented as such.
+            </summary>
+            <remarks>
+            Primary or unique keys in a database can consist or only one <see cref="T:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta">column</see> or a combination of more than one.
+            The amount and <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta.SqlDataType">data types</see> of the source and target columns need to match for a foreign key relationship to be definable.
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.ColumnReferences">
+            <summary>
+            The specific relation of each <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.SourceColumns">source column</see> to each target column in the <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IForeignKeyMeta.TargetIndex">target index</see>.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.IIndexMeta">
+            <summary>
+            Represents an index on a <see cref="T:DoenaSoft.SqlServerDatabaseMeta.ITableMeta">table</see> which may be a unique key or clustered (or ...) index.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IIndexMeta.Table">
+            <summary>
+            The table this index is implemented on.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IIndexMeta.IndexId">
+            <summary>
+            The internal database meta Id of the index.
+            </summary>
+            <remarks>
+            Unlike the <see cref="P:DoenaSoft.SqlServerDatabaseMeta.IMetaBase.MetaId"/> this Id originates from the underlying database.
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IIndexMeta.Columns">
+            <summary>
+            The indexed columns.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IIndexMeta.Properties">
+            <summary>
+            Gives information about the type of the index.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.IMetaBase">
+            <summary>
+            Represents an object in the database covered by this library.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IMetaBase.MetaId">
+            <summary>
+            A unique Id generated by this library.
+            </summary>
+            <remarks>
+            This Id does not originate from the underlying database.
+            This Id is not persisted and a follow-up run against the same database will yield different a Id for the same object.
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IMetaBase.Name">
+            <summary>
+            Name of the object in the database covered by this library.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IMetaBase.Description">
+            <summary>
+            Taken from sys.extended_properties 'MS_Description'.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.IMetaReader">
+            <summary>
+            Interface to represent the actual <see cref="T:DoenaSoft.SqlServerDatabaseMeta.MetaReader"/>. Interface can be used for mocking / testing purposes.
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.IMetaReader.Read(System.String,System.String,System.String,System.String)">
+            <summary>
+            Opens a SQL server database connection with the given parameters and extracts all the meta information about tables, columns, etc.
+            </summary>
+            <param name="server">server name</param>
+            <param name="database">database / catalog name</param>
+            <param name="user">user name</param>
+            <param name="password">password</param>
+            <returns>the meta information</returns>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.IMetaReader.Read(System.String)">
+            <summary>
+            Opens a SQL server database connection with the given <paramref name="connectionString">connection string</paramref> and extracts all the meta information about tables, columns, etc.
+            </summary>
+            <param name="connectionString">connection string</param>
+            <returns>the meta information</returns>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.IMetaReader.Read(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Uses and already opened database connection and extracts all the meta information about tables, columns, etc.
+            </summary>
+            <param name="openConnection">open SQL server connection</param>
+            <returns>the meta information</returns>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.IndexType">
+            <summary>
+            Gives information about the type of the index.
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.IndexType.Unknown">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.IndexType.Clustered">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.IndexType.NonClustered">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.IndexType.Heap">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.IndexType.Unique">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.IndexType.PrimaryKey">
+            <summary />
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.ITableMeta">
+            <summary>
+            Represents a user table or a view in the database.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ITableMeta.Type">
+            <summary>
+            Table or view.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ITableMeta.Columms">
+            <summary>
+            Columns of this table / view.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ITableMeta.PrimaryKey">
+            <summary>
+            The index that represents the primary key of this table.
+            </summary>
+            <remarks>
+            Can be null in a table.
+            Will be null in a view.
+            </remarks>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ITableMeta.OutgoingForeignKeys">
+            <summary>
+            Foreign keys that point from this table to another.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ITableMeta.IncomingForeignKeys">
+            <summary>
+            Foreign keys that point from another table to this one.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ITableMeta.Indices">
+            <summary>
+            Indicies for this table.
+            </summary>
+        </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.ITableMeta.Checks">
+            <summary>
+            Check constraints for this table.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.SqlDataType">
+            <summary>
+            The data type as defined in the underlying database.
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.Unknown">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.bigint">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.int">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.smallint">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.tinyint">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.decimal">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.money">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.numeric">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.smallmoney">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.float">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.real">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.binary">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.image">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.timestamp">
+            <summary>
+            rowversion
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.varbinary">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.bit">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.char">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.nchar">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.ntext">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.nvarchar">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.text">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.varchar">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.xml">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.date">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.datetime">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.datetime2">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.smalldatetime">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.datetimeoffset">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.time">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.uniqueidentifier">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.geography">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.geometry">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.sql_variant">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.SqlDataType.hierarchyid">
+            <summary />
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.TableType">
+            <summary>
+            Defines the type that <see cref="T:DoenaSoft.SqlServerDatabaseMeta.ITableMeta"/> represents. There is no major difference between a user table and a view, except in the <see cref="T:DoenaSoft.SqlServerDatabaseMeta.IColumnMeta">column properties</see>.
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.TableType.Unknown">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.TableType.Table">
+            <summary />
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.TableType.View">
+            <summary />
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.TablesDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ColumnsDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ForeignKeysDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ChecksDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.TablesRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ColumnsRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ForeignKeysRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ChecksRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.TablesRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ColumnsRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ForeignKeysRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ChecksRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TablesTableAdapter">
+             <summary>
+            Represents the connection and commands used to retrieve and save data.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.ColumnsTableAdapter">
+             <summary>
+            Represents the connection and commands used to retrieve and save data.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.IndicesTableAdapter">
+             <summary>
+            Represents the connection and commands used to retrieve and save data.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.ForeignKeysTableAdapter">
+             <summary>
+            Represents the connection and commands used to retrieve and save data.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.ChecksTableAdapter">
+             <summary>
+            Represents the connection and commands used to retrieve and save data.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager">
+             <summary>
+            TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager.UpdateUpdatedRows(DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema,System.Collections.Generic.List{System.Data.DataRow},System.Collections.Generic.List{System.Data.DataRow})">
+             <summary>
+            Update rows in top-down order.
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager.UpdateInsertedRows(DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema,System.Collections.Generic.List{System.Data.DataRow})">
+             <summary>
+            Insert rows in top-down order.
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager.UpdateDeletedRows(DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema,System.Collections.Generic.List{System.Data.DataRow})">
+             <summary>
+            Delete rows in bottom-up order.
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager.GetRealUpdatedRows(System.Data.DataRow[],System.Collections.Generic.List{System.Data.DataRow})">
+             <summary>
+            Remove inserted rows that become updated rows after calling TableAdapter.Update(inserted rows) first
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager.UpdateAll(DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema)">
+             <summary>
+            Update all changes to the dataset.
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager.UpdateOrderOption">
+             <summary>
+            Update Order Option
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TableAdapterManager.SelfReferenceComparer">
+             <summary>
+            Used to sort self-referenced table's rows
+            </summary>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.MetaReader">
+            <summary>
+            Extracts all the meta information about tables, columns, etc.
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.MetaReader.Read(System.String,System.String,System.String,System.String)">
+            <summary>
+            Opens a SQL server database connection with the given parameters and extracts all the meta information about tables, columns, etc.
+            </summary>
+            <param name="server">server name</param>
+            <param name="database">database / catalog name</param>
+            <param name="user">user name</param>
+            <param name="password">password</param>
+            <returns>the meta information</returns>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.MetaReader.Read(System.String)">
+            <summary>
+            Opens a SQL server database connection with the given <paramref name="connectionString">connection string</paramref> and extracts all the meta information about tables, columns, etc.
+            </summary>
+            <param name="connectionString">connection string</param>
+            <returns>the meta information</returns>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.MetaReader.Read(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Uses and already opened database connection and extracts all the meta information about tables, columns, etc.
+            </summary>
+            <param name="openConnection">open SQL server connection</param>
+            <returns>the meta information</returns>
+        </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.TableMetaExtensions">
+            <summary>
+            Extension methods that operate on the meta objects of this library.
+            </summary>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.TableMetaExtensions.GetAllMetaObjects(System.Collections.Generic.IEnumerable{DoenaSoft.SqlServerDatabaseMeta.ITableMeta})">
+            <summary>
+            Returns a list of all the meta objects that were collected by an implementation of <see cref="T:DoenaSoft.SqlServerDatabaseMeta.IMetaReader"/>.
+            </summary>
+            <param name="tableMetas">list of tables / views</param>
+            <returns>A list of all the meta objects related to the input.</returns>
+        </member>
+        <member name="M:DoenaSoft.SqlServerDatabaseMeta.TableMetaExtensions.GetAllMetaObjects(DoenaSoft.SqlServerDatabaseMeta.ITableMeta)">
+            <summary>
+            Returns a list of all the meta objects that were collected by an implementation of <see cref="T:DoenaSoft.SqlServerDatabaseMeta.IMetaReader"/>.
+            </summary>
+            <param name="tableMeta">table / view</param>
+            <returns>A list of all the meta objects related to the input.</returns>
+        </member>
+    </members>
+</doc>
