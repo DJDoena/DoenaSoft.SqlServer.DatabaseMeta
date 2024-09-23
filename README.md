@@ -1,3 +1,5 @@
+# SQL Server Database Meta
+
 This package allows the read-only access to the meta data of a SQL Server database.
 
 It reads out table structures and their columns, the same for views.
@@ -6,7 +8,7 @@ It reads out primary and foreign key constraints and establishes linkes between 
 
 It reads out field constraints and checks.
 
-# Tables and Views Query
+## Tables and Views Query
 
 ```
 SELECT TableName,
@@ -35,7 +37,7 @@ FROM
 
 ```
 
-# Columms Query
+## Columms Query
 
 ```
 select table_name as TableName,
@@ -82,7 +84,7 @@ order by TableName,
          ColumnIndex
 ```
 
-# Foreign Keys Query
+## Foreign Keys Query
 
 ```
 SELECT f.name as ForeignKeyName,
@@ -106,7 +108,7 @@ order by SourceTableName,
          SourceColumnIndex
 ```
 
-# Indices (Indexes) Query
+## Indices (Indexes) Query
 
 ```
 SELECT o.NAME AS 'TableName',
@@ -169,7 +171,7 @@ Order by TableName,
          IndexId
 ```
 
-# Checks Query
+## Checks Query
 
 ```
 select cc.name as CheckName,
