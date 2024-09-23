@@ -37,7 +37,7 @@ FROM
 
 ```
 
-## Columms Query
+## Columns Query
 
 ```
 select table_name as TableName,
