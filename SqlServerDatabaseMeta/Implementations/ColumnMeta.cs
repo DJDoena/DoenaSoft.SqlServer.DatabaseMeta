@@ -1,179 +1,187 @@
-﻿namespace DoenaSoft.SqlServerDatabaseMeta
+﻿using System;
+using System.Reflection;
+
+namespace DoenaSoft.SqlServerDatabaseMeta;
+
+internal sealed class ColumnMeta : MetaBase, IColumnMeta
 {
-    using System;
-    using System.Reflection;
+    public ITableMeta Table { get; }
 
-    internal sealed class ColumnMeta : MetaBase, IColumnMeta
+    public TableType TableType => this.Table.Type;
+
+    public int Index { get; }
+
+    public int? ColumnId { get; }
+
+    public SqlDataType SqlDataType { get; }
+
+    public Type NetDataType => this.GetNetDataType();
+
+    public string DefaultValue { get; }
+
+    public bool IsNullable { get; internal set; }
+
+    public bool? IsIdentity { get; internal set; }
+
+    public int? NumericPrecision { get; internal set; }
+
+    public int? NumericScale { get; internal set; }
+
+    public int? MaxTextLength { get; internal set; }
+
+    public string TextCollation { get; internal set; }
+
+    internal ColumnMeta(string name
+        , string description
+        , ITableMeta table
+        , int index
+        , int? columId
+        , string dataType
+        , string defaultValue)
+        : base(name, description)
     {
-        public ITableMeta Table { get; }
+        this.Table = table;
+        this.Index = index;
+        this.ColumnId = columId;
+        this.SqlDataType = GetSqlDataType(dataType);
+        this.DefaultValue = defaultValue;
+    }
 
-        public TableType TableType => this.Table.Type;
+    public override string ToString()
+        => $"Column: {this.Table.Name}.{base.ToString()}";
 
-        public int Index { get; }
+    public override int GetHashCode()
+        => base.GetHashCode();
 
-        public int? ColumnId { get; }
-
-        public SqlDataType SqlDataType { get; }
-
-        public Type NetDataType => this.GetNetDataType();
-
-        public string DefaultValue { get; }
-
-        public bool IsNullable { get; internal set; }
-
-        public bool? IsIdentity { get; internal set; }
-
-        public int? NumericPrecision { get; internal set; }
-
-        public int? NumericScale { get; internal set; }
-
-        public int? MaxTextLength { get; internal set; }
-
-        public string TextCollation { get; internal set; }
-
-        internal ColumnMeta(string name, string description, ITableMeta table, int index, int? columId, string dataType, string defaultValue) : base(name, description)
+    public override bool Equals(object obj)
+    {
+        if (obj is not IColumnMeta other)
         {
-            this.Table = table;
-            this.Index = index;
-            this.ColumnId = columId;
-            this.SqlDataType = GetSqlDataType(dataType);
-            this.DefaultValue = defaultValue;
+            return false;
         }
 
-        public override string ToString() => $"Column: {this.Table.Name}.{base.ToString()}";
+        return this.MetaId.Equals(other.MetaId);
+    }
 
-        public override int GetHashCode() => base.GetHashCode();
-
-        public override bool Equals(object obj)
+    private static SqlDataType GetSqlDataType(string input)
+    {
+        if (Enum.TryParse<SqlDataType>(input.ToLower(), out var result))
         {
-            if (!(obj is IColumnMeta other))
-            {
-                return false;
-            }
-
-            return this.MetaId.Equals(other.MetaId);
+            return result;
         }
-
-        private static SqlDataType GetSqlDataType(string input)
+        else
         {
-            if (Enum.TryParse<SqlDataType>(input.ToLower(), out var result))
-            {
-                return result;
-            }
-            else
-            {
-                return SqlDataType.Unknown;
-            }
+            return SqlDataType.Unknown;
         }
+    }
 
-        private Type GetNetDataType()
+    private Type GetNetDataType()
+    {
+        switch (this.SqlDataType)
         {
-            switch (this.SqlDataType)
-            {
-                case SqlDataType.bigint:
-                    {
-                        return this.IsNullable ? typeof(long?) : typeof(long);
-                    }
-                case SqlDataType.@int:
-                    {
-                        return this.IsNullable ? typeof(int?) : typeof(int);
-                    }
-                case SqlDataType.smallint:
-                    {
-                        return this.IsNullable ? typeof(short?) : typeof(short);
-                    }
-                case SqlDataType.tinyint:
-                    {
-                        return this.IsNullable ? typeof(byte?) : typeof(byte);
-                    }
-                case SqlDataType.@decimal:
-                case SqlDataType.money:
-                case SqlDataType.numeric:
-                case SqlDataType.smallmoney:
-                    {
-                        return this.IsNullable ? typeof(decimal?) : typeof(decimal);
-                    }
-                case SqlDataType.@float:
-                    {
-                        return this.IsNullable ? typeof(double?) : typeof(double);
-                    }
-                case SqlDataType.real:
-                    {
-                        return this.IsNullable ? typeof(float?) : typeof(float);
-                    }
-                case SqlDataType.binary:
-                case SqlDataType.image:
-                case SqlDataType.timestamp: //rowversion
-                case SqlDataType.varbinary:
-                    {
-                        return typeof(byte[]);
-                    }
-                case SqlDataType.bit:
-                    {
-                        return this.IsNullable ? typeof(bool?) : typeof(bool);
-                    }
-                case SqlDataType.@char:
-                case SqlDataType.nchar:
-                case SqlDataType.ntext:
-                case SqlDataType.nvarchar:
-                case SqlDataType.text:
-                case SqlDataType.varchar:
-                case SqlDataType.xml:
-                    {
-                        return typeof(string);
-                    }
-                case SqlDataType.date:
-                case SqlDataType.datetime:
-                case SqlDataType.datetime2:
-                case SqlDataType.smalldatetime:
-                    {
-                        return this.IsNullable ? typeof(DateTime?) : typeof(DateTime);
-                    }
-                case SqlDataType.datetimeoffset:
-                    {
-                        return this.IsNullable ? typeof(DateTimeOffset?) : typeof(DateTimeOffset);
-                    }
-                case SqlDataType.time:
-                    {
-                        return this.IsNullable ? typeof(TimeSpan?) : typeof(TimeSpan);
-                    }
-                case SqlDataType.uniqueidentifier:
-                    {
-                        return this.IsNullable ? typeof(Guid?) : typeof(Guid);
-                    }
-                case SqlDataType.geography:
-                    {
-                        return GetEntityFrameworkType("System.Data.Entity.Spatial.DbGeography");
-                    }
-                case SqlDataType.geometry:
-                    {
-                        return GetEntityFrameworkType("System.Data.Entity.Spatial.DbGeometry");
-                    }
-                case SqlDataType.sql_variant:
-                case SqlDataType.hierarchyid:
-                default:
-                    {
-                        throw new NotSupportedException($"'{this.SqlDataType}' is currently not supported");
-                    }
-            }
+            case SqlDataType.bigint:
+                {
+                    return this.IsNullable ? typeof(long?) : typeof(long);
+                }
+            case SqlDataType.@int:
+                {
+                    return this.IsNullable ? typeof(int?) : typeof(int);
+                }
+            case SqlDataType.smallint:
+                {
+                    return this.IsNullable ? typeof(short?) : typeof(short);
+                }
+            case SqlDataType.tinyint:
+                {
+                    return this.IsNullable ? typeof(byte?) : typeof(byte);
+                }
+            case SqlDataType.@decimal:
+            case SqlDataType.money:
+            case SqlDataType.numeric:
+            case SqlDataType.smallmoney:
+                {
+                    return this.IsNullable ? typeof(decimal?) : typeof(decimal);
+                }
+            case SqlDataType.@float:
+                {
+                    return this.IsNullable ? typeof(double?) : typeof(double);
+                }
+            case SqlDataType.real:
+                {
+                    return this.IsNullable ? typeof(float?) : typeof(float);
+                }
+            case SqlDataType.binary:
+            case SqlDataType.image:
+            case SqlDataType.timestamp: //rowversion
+            case SqlDataType.varbinary:
+                {
+                    return typeof(byte[]);
+                }
+            case SqlDataType.bit:
+                {
+                    return this.IsNullable ? typeof(bool?) : typeof(bool);
+                }
+            case SqlDataType.@char:
+            case SqlDataType.nchar:
+            case SqlDataType.ntext:
+            case SqlDataType.nvarchar:
+            case SqlDataType.text:
+            case SqlDataType.varchar:
+            case SqlDataType.xml:
+                {
+                    return typeof(string);
+                }
+            case SqlDataType.date:
+            case SqlDataType.datetime:
+            case SqlDataType.datetime2:
+            case SqlDataType.smalldatetime:
+                {
+                    return this.IsNullable ? typeof(DateTime?) : typeof(DateTime);
+                }
+            case SqlDataType.datetimeoffset:
+                {
+                    return this.IsNullable ? typeof(DateTimeOffset?) : typeof(DateTimeOffset);
+                }
+            case SqlDataType.time:
+                {
+                    return this.IsNullable ? typeof(TimeSpan?) : typeof(TimeSpan);
+                }
+            case SqlDataType.uniqueidentifier:
+                {
+                    return this.IsNullable ? typeof(Guid?) : typeof(Guid);
+                }
+            case SqlDataType.geography:
+                {
+                    return GetEntityFrameworkType("System.Data.Entity.Spatial.DbGeography");
+                }
+            case SqlDataType.geometry:
+                {
+                    return GetEntityFrameworkType("System.Data.Entity.Spatial.DbGeometry");
+                }
+            case SqlDataType.sql_variant:
+            case SqlDataType.hierarchyid:
+            default:
+                {
+                    throw new NotSupportedException($"'{this.SqlDataType}' is currently not supported");
+                }
         }
+    }
 
-        private static Type GetEntityFrameworkType(string typeName)
+    private static Type GetEntityFrameworkType(string typeName)
+    {
+        const string AssemblyName = "EntityFramework.dll";
+
+        try
         {
-            const string AssemblyName = "EntityFramework.dll";
+            var assembly = Assembly.LoadFrom(AssemblyName);
 
-            try
-            {
-                var assembly = Assembly.LoadFrom(AssemblyName);
+            var type = assembly.GetType(typeName);
 
-                var type = assembly.GetType(typeName);
-
-                return type;
-            }
-            catch
-            {
-                throw new NotSupportedException($"Could not load type '{typeName}' from assembly '{AssemblyName}'.");
-            }
+            return type;
+        }
+        catch
+        {
+            throw new NotSupportedException($"Could not load type '{typeName}' from assembly '{AssemblyName}'.");
         }
     }
 }

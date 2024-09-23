@@ -1,71 +1,77 @@
-﻿namespace DoenaSoft.SqlServerDatabaseMeta
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace DoenaSoft.SqlServerDatabaseMeta;
+
+internal sealed class IndexMeta : MetaBase, IIndexMeta
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    public ITableMeta Table { get; }
 
-    internal sealed class IndexMeta : MetaBase, IIndexMeta
+    public int IndexId { get; }
+
+    public IReadOnlyList<IColumnMeta> Columns { get; }
+
+    public IndexType Properties { get; }
+
+    internal IndexMeta(string name
+        , string description
+        , ITableMeta table
+        , int indexId
+        , List<IColumnMeta> columns
+        , List<string> propertyTags)
+        : base(name, description)
     {
-        public ITableMeta Table { get; }
+        this.Table = table;
+        this.IndexId = indexId;
+        this.Columns = columns.AsReadOnly();
+        this.Properties = GetPropertyFlags(propertyTags);
+    }
 
-        public int IndexId { get; }
+    public override string ToString()
+        => $"Index: {this.Table.Name}.{base.ToString()} ({string.Join(", ", this.Columns.Select(c => c.Name))})";
 
-        public IReadOnlyList<IColumnMeta> Columns { get; }
+    public override int GetHashCode()
+        => base.GetHashCode();
 
-        public IndexType Properties { get; }
-
-        internal IndexMeta(string name, string description, ITableMeta table, int indexId, List<IColumnMeta> columns, List<string> propertyTags) : base(name, description)
+    public override bool Equals(object obj)
+    {
+        if (obj is not IIndexMeta other)
         {
-            this.Table = table;
-            this.IndexId = indexId;
-            this.Columns = columns.AsReadOnly();
-            this.Properties = GetPropertyFlags(propertyTags);
+            return false;
         }
 
-        public override string ToString() => $"Index: {this.Table.Name}.{base.ToString()} ({string.Join(", ", this.Columns.Select(c => c.Name))})";
+        return this.MetaId.Equals(other.MetaId);
+    }
 
-        public override int GetHashCode() => base.GetHashCode();
+    private static IndexType GetPropertyFlags(List<string> propertyTags)
+    {
+        var result = IndexType.Unknown;
 
-        public override bool Equals(object obj)
+        if (propertyTags.Contains("clustered"))
         {
-            if (!(obj is IIndexMeta other))
-            {
-                return false;
-            }
-
-            return this.MetaId.Equals(other.MetaId);
+            result |= IndexType.Clustered;
         }
 
-        private static IndexType GetPropertyFlags(List<string> propertyTags)
+        if (propertyTags.Contains("nonclustered"))
         {
-            var result = IndexType.Unknown;
-
-            if (propertyTags.Contains("clustered"))
-            {
-                result |= IndexType.Clustered;
-            }
-
-            if (propertyTags.Contains("nonclustered"))
-            {
-                result |= IndexType.NonClustered;
-            }
-
-            if (propertyTags.Contains("heap"))
-            {
-                result |= IndexType.Heap;
-            }
-
-            if (propertyTags.Contains("unique"))
-            {
-                result |= IndexType.Unique;
-            }
-
-            if (propertyTags.Contains("primary key"))
-            {
-                result |= IndexType.PrimaryKey;
-            }
-
-            return result;
+            result |= IndexType.NonClustered;
         }
 
+        if (propertyTags.Contains("heap"))
+        {
+            result |= IndexType.Heap;
+        }
+
+        if (propertyTags.Contains("unique"))
+        {
+            result |= IndexType.Unique;
+        }
+
+        if (propertyTags.Contains("primary key"))
+        {
+            result |= IndexType.PrimaryKey;
+        }
+
+        return result;
     }
 }

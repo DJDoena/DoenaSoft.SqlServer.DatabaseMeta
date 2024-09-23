@@ -1,112 +1,111 @@
-﻿namespace DoenaSoft.SqlServerDatabaseMeta
+﻿namespace DoenaSoft.SqlServerDatabaseMeta;
+
+/// <summary>
+/// The data type as defined in the underlying database.
+/// </summary>
+public enum SqlDataType : byte
 {
+    /// <summary />
+    Unknown,
+
+    /// <summary />
+    bigint,
+
+    /// <summary />
+    @int,
+
+    /// <summary />
+    smallint,
+
+    /// <summary />
+    tinyint,
+
+    /// <summary />
+    @decimal,
+
+    /// <summary />
+    money,
+
+    /// <summary />
+    numeric,
+
+    /// <summary />
+    smallmoney,
+
+    /// <summary />
+    @float,
+
+    /// <summary />
+    real,
+
+    /// <summary />
+    binary,
+
+    /// <summary />
+    image,
+
     /// <summary>
-    /// The data type as defined in the underlying database.
+    /// rowversion
     /// </summary>
-    public enum SqlDataType : byte
-    {
-        /// <summary />
-        Unknown,
+    timestamp,
 
-        /// <summary />
-        bigint,
+    /// <summary />
+    varbinary,
 
-        /// <summary />
-        @int,
+    /// <summary />
+    bit,
 
-        /// <summary />
-        smallint,
+    /// <summary />
+    @char,
 
-        /// <summary />
-        tinyint,
+    /// <summary />
+    nchar,
 
-        /// <summary />
-        @decimal,
+    /// <summary />
+    ntext,
 
-        /// <summary />
-        money,
+    /// <summary />
+    nvarchar,
 
-        /// <summary />
-        numeric,
+    /// <summary />
+    text,
 
-        /// <summary />
-        smallmoney,
+    /// <summary />
+    varchar,
 
-        /// <summary />
-        @float,
+    /// <summary />
+    xml,
 
-        /// <summary />
-        real,
+    /// <summary />
+    date,
 
-        /// <summary />
-        binary,
+    /// <summary />
+    datetime,
 
-        /// <summary />
-        image,
+    /// <summary />
+    datetime2,
 
-        /// <summary>
-        /// rowversion
-        /// </summary>
-        timestamp,
+    /// <summary />
+    smalldatetime,
 
-        /// <summary />
-        varbinary,
+    /// <summary />
+    datetimeoffset,
 
-        /// <summary />
-        bit,
+    /// <summary />
+    time,
 
-        /// <summary />
-        @char,
+    /// <summary />
+    uniqueidentifier,
 
-        /// <summary />
-        nchar,
+    /// <summary />
+    geography,
 
-        /// <summary />
-        ntext,
+    /// <summary />
+    geometry,
 
-        /// <summary />
-        nvarchar,
+    /// <summary />
+    sql_variant,
 
-        /// <summary />
-        text,
-
-        /// <summary />
-        varchar,
-
-        /// <summary />
-        xml,
-
-        /// <summary />
-        date,
-
-        /// <summary />
-        datetime,
-
-        /// <summary />
-        datetime2,
-
-        /// <summary />
-        smalldatetime,
-
-        /// <summary />
-        datetimeoffset,
-
-        /// <summary />
-        time,
-
-        /// <summary />
-        uniqueidentifier,
-
-        /// <summary />
-        geography,
-
-        /// <summary />
-        geometry,
-
-        /// <summary />
-        sql_variant,
-
-        /// <summary />
-        hierarchyid,
-    }
+    /// <summary />
+    hierarchyid,
 }

@@ -434,17 +434,17 @@
             Represents a strongly typed in-memory cache of data.
             </summary>
         </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.TablesDataTable">
              <summary>
             Represents the strongly named DataTable class.
             </summary>
         </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ColumnsDataTable">
-             <summary>
-            Represents the strongly named DataTable class.
-            </summary>
-        </member>
-        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesDataTable">
              <summary>
             Represents the strongly named DataTable class.
             </summary>
@@ -459,17 +459,17 @@
             Represents the strongly named DataTable class.
             </summary>
         </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.TablesRow">
              <summary>
             Represents strongly named DataRow class.
             </summary>
         </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ColumnsRow">
-             <summary>
-            Represents strongly named DataRow class.
-            </summary>
-        </member>
-        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesRow">
              <summary>
             Represents strongly named DataRow class.
             </summary>
@@ -484,17 +484,17 @@
             Represents strongly named DataRow class.
             </summary>
         </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.TablesRowChangeEvent">
              <summary>
             Row event argument class
             </summary>
         </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.ColumnsRowChangeEvent">
-             <summary>
-            Row event argument class
-            </summary>
-        </member>
-        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchema.IndicesRowChangeEvent">
              <summary>
             Row event argument class
             </summary>
@@ -509,17 +509,17 @@
             Row event argument class
             </summary>
         </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.IndicesTableAdapter">
+             <summary>
+            Represents the connection and commands used to retrieve and save data.
+            </summary>
+        </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.TablesTableAdapter">
              <summary>
             Represents the connection and commands used to retrieve and save data.
             </summary>
         </member>
         <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.ColumnsTableAdapter">
-             <summary>
-            Represents the connection and commands used to retrieve and save data.
-            </summary>
-        </member>
-        <member name="T:DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters.IndicesTableAdapter">
              <summary>
             Represents the connection and commands used to retrieve and save data.
             </summary>

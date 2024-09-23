@@ -1,73 +1,82 @@
-﻿namespace DoenaSoft.SqlServerDatabaseMeta
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace DoenaSoft.SqlServerDatabaseMeta;
+
+internal sealed class ForeignKeyMeta : MetaBase, IForeignKeyMeta
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    private readonly int _targetTableIndexId;
 
-    internal sealed class ForeignKeyMeta : MetaBase, IForeignKeyMeta
+    private readonly List<ForeignKeyColumnReferenceIndexes> _columnReferenceIndexes;
+
+    public ITableMeta SourceTable
+        => this.SourceColumns.First().Table;
+
+    public IReadOnlyList<IColumnMeta> SourceColumns { get; }
+
+    public ITableMeta TargetTable { get; }
+
+    public IIndexMeta TargetIndex
+        => this.TargetTable.Indices.First(i => i.IndexId == _targetTableIndexId);
+
+    public IReadOnlyList<IForeignKeyColumnReference> ColumnReferences
+        => this.GetColumnReferences().ToList().AsReadOnly();
+
+    internal ForeignKeyMeta(string name
+        , string description
+        , List<IColumnMeta> sourceColumns
+        , ITableMeta targetTable
+        , int targetTableIndexId
+        , List<ForeignKeyColumnReferenceIndexes> columnReferences)
+        : base(name, description)
     {
-        private readonly int _targetTableIndexId;
+        this.SourceColumns = sourceColumns.AsReadOnly();
+        this.TargetTable = targetTable;
+        _targetTableIndexId = targetTableIndexId;
+        _columnReferenceIndexes = columnReferences;
+    }
 
-        private readonly List<ForeignKeyColumnReferenceIndexes> _columnReferenceIndexes;
+    public override string ToString()
+    {
+        var references = this.ColumnReferences;
 
-        public ITableMeta SourceTable => this.SourceColumns.First().Table;
+        var sourceColumnText = references.Count > 1
+            ? $"[{string.Join(", ", references.Select(r => r.SourceColumn.Name))}]"
+            : references[0].SourceColumn.Name;
 
-        public IReadOnlyList<IColumnMeta> SourceColumns { get; }
+        var targetColumText = references.Count > 1
+            ? $"[{string.Join(", ", references.Select(r => r.TargetColumn.Name))}]"
+            : references[0].TargetColumn.Name;
 
-        public ITableMeta TargetTable { get; }
+        var result = $"Foreign key: {this.SourceTable.Name}.{sourceColumnText} -> {this.TargetTable.Name}.{targetColumText} ({base.ToString()})";
 
-        public IIndexMeta TargetIndex => this.TargetTable.Indices.First(i => i.IndexId == _targetTableIndexId);
+        return result;
+    }
 
-        public IReadOnlyList<IForeignKeyColumnReference> ColumnReferences => this.GetColumnReferences().ToList().AsReadOnly();
+    public override int GetHashCode()
+        => base.GetHashCode();
 
-        internal ForeignKeyMeta(string name, string description, List<IColumnMeta> sourceColumns, ITableMeta targetTable, int targetTableIndexId, List<ForeignKeyColumnReferenceIndexes> columnReferences) : base(name, description)
+    public override bool Equals(object obj)
+    {
+        if (obj is not IForeignKeyMeta other)
         {
-            this.SourceColumns = sourceColumns.AsReadOnly();
-            this.TargetTable = targetTable;
-            _targetTableIndexId = targetTableIndexId;
-            _columnReferenceIndexes = columnReferences;
+            return false;
         }
 
-        public override string ToString()
+        return this.MetaId.Equals(other.MetaId);
+    }
+
+    private IEnumerable<IForeignKeyColumnReference> GetColumnReferences()
+    {
+        var targetColumns = this.TargetIndex.Columns;
+
+        foreach (var sourceColumn in this.SourceColumns)
         {
-            var references = this.ColumnReferences;
+            var reference = _columnReferenceIndexes.First(r => r.SourceColumnId == sourceColumn.ColumnId);
 
-            var sourceColumnText = references.Count > 1
-                ? $"[{string.Join(", ", references.Select(r => r.SourceColumn.Name))}]"
-                : references[0].SourceColumn.Name;
+            var targetColumn = targetColumns.First(tc => tc.ColumnId == reference.TargetColumnId);
 
-            var targetColumText = references.Count > 1
-                ? $"[{string.Join(", ", references.Select(r => r.TargetColumn.Name))}]"
-                : references[0].TargetColumn.Name;
-
-            var result = $"Foreign key: {this.SourceTable.Name}.{sourceColumnText} -> {this.TargetTable.Name}.{targetColumText} ({base.ToString()})";
-
-            return result;
-        }
-
-        public override int GetHashCode() => base.GetHashCode();
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is IForeignKeyMeta other))
-            {
-                return false;
-            }
-
-            return this.MetaId.Equals(other.MetaId);
-        }
-
-        private IEnumerable<IForeignKeyColumnReference> GetColumnReferences()
-        {
-            var targetColumns = this.TargetIndex.Columns;
-
-            foreach (var sourceColumn in this.SourceColumns)
-            {
-                var reference = _columnReferenceIndexes.First(r => r.SourceColumnId == sourceColumn.ColumnId);
-
-                var targetColumn = targetColumns.First(tc => tc.ColumnId == reference.TargetColumnId);
-
-                yield return new ForeignKeyColumnReference(sourceColumn, targetColumn);
-            }
+            yield return new ForeignKeyColumnReference(sourceColumn, targetColumn);
         }
     }
 }
