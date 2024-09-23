@@ -6,7 +6,7 @@ It reads out primary and foreign key constraints and establishes linkes between 
 
 It reads out field constraints and checks.
 
-#Tables and Views Query
+# Tables and Views Query
 
 ```
 SELECT TableName,
@@ -35,7 +35,7 @@ FROM
 
 ```
 
-#Columms
+# Columms Query
 
 ```
 select table_name as TableName,
@@ -82,7 +82,7 @@ order by TableName,
          ColumnIndex
 ```
 
-#Foreign Keys
+# Foreign Keys Query
 
 ```
 SELECT f.name as ForeignKeyName,
@@ -106,7 +106,7 @@ order by SourceTableName,
          SourceColumnIndex
 ```
 
-#Indices (Indexes)
+# Indices (Indexes) Query
 
 ```
 SELECT o.NAME AS 'TableName',
@@ -169,7 +169,7 @@ Order by TableName,
          IndexId
 ```
 
-#Checks
+# Checks Query
 
 ```
 select cc.name as CheckName,
