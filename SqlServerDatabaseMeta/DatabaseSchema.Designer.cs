@@ -24,11 +24,11 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
     public partial class DatabaseSchema : global::System.Data.DataSet {
         
+        private IndicesDataTable tableIndices;
+        
         private TablesDataTable tableTables;
         
         private ColumnsDataTable tableColumns;
-        
-        private IndicesDataTable tableIndices;
         
         private ForeignKeysDataTable tableForeignKeys;
         
@@ -62,14 +62,14 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
+                if ((ds.Tables["Indices"] != null)) {
+                    base.Tables.Add(new IndicesDataTable(ds.Tables["Indices"]));
+                }
                 if ((ds.Tables["Tables"] != null)) {
                     base.Tables.Add(new TablesDataTable(ds.Tables["Tables"]));
                 }
                 if ((ds.Tables["Columns"] != null)) {
                     base.Tables.Add(new ColumnsDataTable(ds.Tables["Columns"]));
-                }
-                if ((ds.Tables["Indices"] != null)) {
-                    base.Tables.Add(new IndicesDataTable(ds.Tables["Indices"]));
                 }
                 if ((ds.Tables["ForeignKeys"] != null)) {
                     base.Tables.Add(new ForeignKeysDataTable(ds.Tables["ForeignKeys"]));
@@ -99,6 +99,16 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public IndicesDataTable Indices {
+            get {
+                return this.tableIndices;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public TablesDataTable _Tables {
             get {
                 return this.tableTables;
@@ -112,16 +122,6 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         public ColumnsDataTable Columns {
             get {
                 return this.tableColumns;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public IndicesDataTable Indices {
-            get {
-                return this.tableIndices;
             }
         }
         
@@ -212,14 +212,14 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
+                if ((ds.Tables["Indices"] != null)) {
+                    base.Tables.Add(new IndicesDataTable(ds.Tables["Indices"]));
+                }
                 if ((ds.Tables["Tables"] != null)) {
                     base.Tables.Add(new TablesDataTable(ds.Tables["Tables"]));
                 }
                 if ((ds.Tables["Columns"] != null)) {
                     base.Tables.Add(new ColumnsDataTable(ds.Tables["Columns"]));
-                }
-                if ((ds.Tables["Indices"] != null)) {
-                    base.Tables.Add(new IndicesDataTable(ds.Tables["Indices"]));
                 }
                 if ((ds.Tables["ForeignKeys"] != null)) {
                     base.Tables.Add(new ForeignKeysDataTable(ds.Tables["ForeignKeys"]));
@@ -260,6 +260,12 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         internal void InitVars(bool initTable) {
+            this.tableIndices = ((IndicesDataTable)(base.Tables["Indices"]));
+            if ((initTable == true)) {
+                if ((this.tableIndices != null)) {
+                    this.tableIndices.InitVars();
+                }
+            }
             this.tableTables = ((TablesDataTable)(base.Tables["Tables"]));
             if ((initTable == true)) {
                 if ((this.tableTables != null)) {
@@ -270,12 +276,6 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
             if ((initTable == true)) {
                 if ((this.tableColumns != null)) {
                     this.tableColumns.InitVars();
-                }
-            }
-            this.tableIndices = ((IndicesDataTable)(base.Tables["Indices"]));
-            if ((initTable == true)) {
-                if ((this.tableIndices != null)) {
-                    this.tableIndices.InitVars();
                 }
             }
             this.tableForeignKeys = ((ForeignKeysDataTable)(base.Tables["ForeignKeys"]));
@@ -300,16 +300,22 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
             this.Namespace = "http://tempuri.org/DatabaseSchema.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
+            this.tableIndices = new IndicesDataTable();
+            base.Tables.Add(this.tableIndices);
             this.tableTables = new TablesDataTable();
             base.Tables.Add(this.tableTables);
             this.tableColumns = new ColumnsDataTable();
             base.Tables.Add(this.tableColumns);
-            this.tableIndices = new IndicesDataTable();
-            base.Tables.Add(this.tableIndices);
             this.tableForeignKeys = new ForeignKeysDataTable();
             base.Tables.Add(this.tableForeignKeys);
             this.tableChecks = new ChecksDataTable();
             base.Tables.Add(this.tableChecks);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        private bool ShouldSerializeIndices() {
+            return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -321,12 +327,6 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private bool ShouldSerializeColumns() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializeIndices() {
             return false;
         }
         
@@ -398,19 +398,346 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        public delegate void IndicesRowChangeEventHandler(object sender, IndicesRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void TablesRowChangeEventHandler(object sender, TablesRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void ColumnsRowChangeEventHandler(object sender, ColumnsRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void IndicesRowChangeEventHandler(object sender, IndicesRowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void ForeignKeysRowChangeEventHandler(object sender, ForeignKeysRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void ChecksRowChangeEventHandler(object sender, ChecksRowChangeEvent e);
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class IndicesDataTable : global::System.Data.TypedTableBase<IndicesRow> {
+            
+            private global::System.Data.DataColumn columnTableName;
+            
+            private global::System.Data.DataColumn columnIndexName;
+            
+            private global::System.Data.DataColumn columnProperties;
+            
+            private global::System.Data.DataColumn columnColumns;
+            
+            private global::System.Data.DataColumn columnIndexId;
+            
+            private global::System.Data.DataColumn columnDescription;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public IndicesDataTable() {
+                this.TableName = "Indices";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            internal IndicesDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected IndicesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn TableNameColumn {
+                get {
+                    return this.columnTableName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IndexNameColumn {
+                get {
+                    return this.columnIndexName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn PropertiesColumn {
+                get {
+                    return this.columnProperties;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ColumnsColumn {
+                get {
+                    return this.columnColumns;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IndexIdColumn {
+                get {
+                    return this.columnIndexId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn DescriptionColumn {
+                get {
+                    return this.columnDescription;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public IndicesRow this[int index] {
+                get {
+                    return ((IndicesRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event IndicesRowChangeEventHandler IndicesRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event IndicesRowChangeEventHandler IndicesRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event IndicesRowChangeEventHandler IndicesRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event IndicesRowChangeEventHandler IndicesRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void AddIndicesRow(IndicesRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public IndicesRow AddIndicesRow(string TableName, string IndexName, string Properties, string Columns, int IndexId, string Description) {
+                IndicesRow rowIndicesRow = ((IndicesRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        TableName,
+                        IndexName,
+                        Properties,
+                        Columns,
+                        IndexId,
+                        Description};
+                rowIndicesRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowIndicesRow);
+                return rowIndicesRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                IndicesDataTable cln = ((IndicesDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new IndicesDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            internal void InitVars() {
+                this.columnTableName = base.Columns["TableName"];
+                this.columnIndexName = base.Columns["IndexName"];
+                this.columnProperties = base.Columns["Properties"];
+                this.columnColumns = base.Columns["Columns"];
+                this.columnIndexId = base.Columns["IndexId"];
+                this.columnDescription = base.Columns["Description"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            private void InitClass() {
+                this.columnTableName = new global::System.Data.DataColumn("TableName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTableName);
+                this.columnIndexName = new global::System.Data.DataColumn("IndexName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIndexName);
+                this.columnProperties = new global::System.Data.DataColumn("Properties", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnProperties);
+                this.columnColumns = new global::System.Data.DataColumn("Columns", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnColumns);
+                this.columnIndexId = new global::System.Data.DataColumn("IndexId", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIndexId);
+                this.columnDescription = new global::System.Data.DataColumn("Description", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDescription);
+                this.columnTableName.AllowDBNull = false;
+                this.columnTableName.MaxLength = 128;
+                this.columnIndexName.MaxLength = 128;
+                this.columnProperties.ReadOnly = true;
+                this.columnProperties.MaxLength = 81;
+                this.columnColumns.ReadOnly = true;
+                this.columnColumns.MaxLength = 2147483647;
+                this.columnIndexId.AllowDBNull = false;
+                this.columnDescription.ReadOnly = true;
+                this.columnDescription.MaxLength = 30;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public IndicesRow NewIndicesRow() {
+                return ((IndicesRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new IndicesRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(IndicesRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.IndicesRowChanged != null)) {
+                    this.IndicesRowChanged(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.IndicesRowChanging != null)) {
+                    this.IndicesRowChanging(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.IndicesRowDeleted != null)) {
+                    this.IndicesRowDeleted(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.IndicesRowDeleting != null)) {
+                    this.IndicesRowDeleting(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void RemoveIndicesRow(IndicesRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                DatabaseSchema ds = new DatabaseSchema();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "IndicesDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -1131,333 +1458,6 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class IndicesDataTable : global::System.Data.TypedTableBase<IndicesRow> {
-            
-            private global::System.Data.DataColumn columnTableName;
-            
-            private global::System.Data.DataColumn columnIndexName;
-            
-            private global::System.Data.DataColumn columnProperties;
-            
-            private global::System.Data.DataColumn columnColumns;
-            
-            private global::System.Data.DataColumn columnIndexId;
-            
-            private global::System.Data.DataColumn columnDescription;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public IndicesDataTable() {
-                this.TableName = "Indices";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal IndicesDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected IndicesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn TableNameColumn {
-                get {
-                    return this.columnTableName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn IndexNameColumn {
-                get {
-                    return this.columnIndexName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn PropertiesColumn {
-                get {
-                    return this.columnProperties;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ColumnsColumn {
-                get {
-                    return this.columnColumns;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn IndexIdColumn {
-                get {
-                    return this.columnIndexId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn DescriptionColumn {
-                get {
-                    return this.columnDescription;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public IndicesRow this[int index] {
-                get {
-                    return ((IndicesRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event IndicesRowChangeEventHandler IndicesRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event IndicesRowChangeEventHandler IndicesRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event IndicesRowChangeEventHandler IndicesRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event IndicesRowChangeEventHandler IndicesRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void AddIndicesRow(IndicesRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public IndicesRow AddIndicesRow(string TableName, string IndexName, string Properties, string Columns, int IndexId, string Description) {
-                IndicesRow rowIndicesRow = ((IndicesRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        TableName,
-                        IndexName,
-                        Properties,
-                        Columns,
-                        IndexId,
-                        Description};
-                rowIndicesRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowIndicesRow);
-                return rowIndicesRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                IndicesDataTable cln = ((IndicesDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new IndicesDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal void InitVars() {
-                this.columnTableName = base.Columns["TableName"];
-                this.columnIndexName = base.Columns["IndexName"];
-                this.columnProperties = base.Columns["Properties"];
-                this.columnColumns = base.Columns["Columns"];
-                this.columnIndexId = base.Columns["IndexId"];
-                this.columnDescription = base.Columns["Description"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            private void InitClass() {
-                this.columnTableName = new global::System.Data.DataColumn("TableName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTableName);
-                this.columnIndexName = new global::System.Data.DataColumn("IndexName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIndexName);
-                this.columnProperties = new global::System.Data.DataColumn("Properties", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnProperties);
-                this.columnColumns = new global::System.Data.DataColumn("Columns", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnColumns);
-                this.columnIndexId = new global::System.Data.DataColumn("IndexId", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIndexId);
-                this.columnDescription = new global::System.Data.DataColumn("Description", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDescription);
-                this.columnTableName.AllowDBNull = false;
-                this.columnTableName.MaxLength = 128;
-                this.columnIndexName.MaxLength = 128;
-                this.columnProperties.ReadOnly = true;
-                this.columnProperties.MaxLength = 81;
-                this.columnColumns.ReadOnly = true;
-                this.columnColumns.MaxLength = 2147483647;
-                this.columnIndexId.AllowDBNull = false;
-                this.columnDescription.ReadOnly = true;
-                this.columnDescription.MaxLength = 30;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public IndicesRow NewIndicesRow() {
-                return ((IndicesRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new IndicesRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(IndicesRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.IndicesRowChanged != null)) {
-                    this.IndicesRowChanged(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.IndicesRowChanging != null)) {
-                    this.IndicesRowChanging(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.IndicesRowDeleted != null)) {
-                    this.IndicesRowDeleted(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.IndicesRowDeleting != null)) {
-                    this.IndicesRowDeleting(this, new IndicesRowChangeEvent(((IndicesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void RemoveIndicesRow(IndicesRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                DatabaseSchema ds = new DatabaseSchema();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "IndicesDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class ForeignKeysDataTable : global::System.Data.TypedTableBase<ForeignKeysRow> {
             
             private global::System.Data.DataColumn columnForeignKeyName;
@@ -2110,6 +2110,155 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
+        public partial class IndicesRow : global::System.Data.DataRow {
+            
+            private IndicesDataTable tableIndices;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            internal IndicesRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableIndices = ((IndicesDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string TableName {
+                get {
+                    return ((string)(this[this.tableIndices.TableNameColumn]));
+                }
+                set {
+                    this[this.tableIndices.TableNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string IndexName {
+                get {
+                    try {
+                        return ((string)(this[this.tableIndices.IndexNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IndexName\' in table \'Indices\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableIndices.IndexNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Properties {
+                get {
+                    try {
+                        return ((string)(this[this.tableIndices.PropertiesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Properties\' in table \'Indices\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableIndices.PropertiesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Columns {
+                get {
+                    try {
+                        return ((string)(this[this.tableIndices.ColumnsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Columns\' in table \'Indices\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableIndices.ColumnsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int IndexId {
+                get {
+                    return ((int)(this[this.tableIndices.IndexIdColumn]));
+                }
+                set {
+                    this[this.tableIndices.IndexIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Description {
+                get {
+                    try {
+                        return ((string)(this[this.tableIndices.DescriptionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Description\' in table \'Indices\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableIndices.DescriptionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsIndexNameNull() {
+                return this.IsNull(this.tableIndices.IndexNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetIndexNameNull() {
+                this[this.tableIndices.IndexNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsPropertiesNull() {
+                return this.IsNull(this.tableIndices.PropertiesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetPropertiesNull() {
+                this[this.tableIndices.PropertiesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsColumnsNull() {
+                return this.IsNull(this.tableIndices.ColumnsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetColumnsNull() {
+                this[this.tableIndices.ColumnsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsDescriptionNull() {
+                return this.IsNull(this.tableIndices.DescriptionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetDescriptionNull() {
+                this[this.tableIndices.DescriptionColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
         public partial class TablesRow : global::System.Data.DataRow {
             
             private TablesDataTable tableTables;
@@ -2571,155 +2720,6 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class IndicesRow : global::System.Data.DataRow {
-            
-            private IndicesDataTable tableIndices;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal IndicesRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tableIndices = ((IndicesDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string TableName {
-                get {
-                    return ((string)(this[this.tableIndices.TableNameColumn]));
-                }
-                set {
-                    this[this.tableIndices.TableNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string IndexName {
-                get {
-                    try {
-                        return ((string)(this[this.tableIndices.IndexNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'IndexName\' in table \'Indices\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableIndices.IndexNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string Properties {
-                get {
-                    try {
-                        return ((string)(this[this.tableIndices.PropertiesColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Properties\' in table \'Indices\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableIndices.PropertiesColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string Columns {
-                get {
-                    try {
-                        return ((string)(this[this.tableIndices.ColumnsColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Columns\' in table \'Indices\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableIndices.ColumnsColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public int IndexId {
-                get {
-                    return ((int)(this[this.tableIndices.IndexIdColumn]));
-                }
-                set {
-                    this[this.tableIndices.IndexIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string Description {
-                get {
-                    try {
-                        return ((string)(this[this.tableIndices.DescriptionColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Description\' in table \'Indices\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableIndices.DescriptionColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsIndexNameNull() {
-                return this.IsNull(this.tableIndices.IndexNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetIndexNameNull() {
-                this[this.tableIndices.IndexNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsPropertiesNull() {
-                return this.IsNull(this.tableIndices.PropertiesColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetPropertiesNull() {
-                this[this.tableIndices.PropertiesColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsColumnsNull() {
-                return this.IsNull(this.tableIndices.ColumnsColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetColumnsNull() {
-                this[this.tableIndices.ColumnsColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsDescriptionNull() {
-                return this.IsNull(this.tableIndices.DescriptionColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetDescriptionNull() {
-                this[this.tableIndices.DescriptionColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
         public partial class ForeignKeysRow : global::System.Data.DataRow {
             
             private ForeignKeysDataTable tableForeignKeys;
@@ -3002,6 +3002,40 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        public class IndicesRowChangeEvent : global::System.EventArgs {
+            
+            private IndicesRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public IndicesRowChangeEvent(IndicesRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public IndicesRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public class TablesRowChangeEvent : global::System.EventArgs {
             
             private TablesRow eventRow;
@@ -3052,40 +3086,6 @@ namespace DoenaSoft.SqlServerDatabaseMeta {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public ColumnsRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class IndicesRowChangeEvent : global::System.EventArgs {
-            
-            private IndicesRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public IndicesRowChangeEvent(IndicesRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public IndicesRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -3181,7 +3181,192 @@ namespace DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    internal partial class TablesTableAdapter : global::System.ComponentModel.Component {
+    public partial class IndicesTableAdapter : global::System.ComponentModel.Component {
+        
+        private global::System.Data.SqlClient.SqlDataAdapter _adapter;
+        
+        private global::System.Data.SqlClient.SqlConnection _connection;
+        
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
+        private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
+        
+        private bool _clearBeforeFill;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        public IndicesTableAdapter() {
+            this.ClearBeforeFill = true;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
+            get {
+                if ((this._adapter == null)) {
+                    this.InitAdapter();
+                }
+                return this._adapter;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        public global::System.Data.SqlClient.SqlConnection Connection {
+            get {
+                if ((this._connection == null)) {
+                    this.InitConnection();
+                }
+                return this._connection;
+            }
+            set {
+                this._connection = value;
+                if ((this.Adapter.InsertCommand != null)) {
+                    this.Adapter.InsertCommand.Connection = value;
+                }
+                if ((this.Adapter.DeleteCommand != null)) {
+                    this.Adapter.DeleteCommand.Connection = value;
+                }
+                if ((this.Adapter.UpdateCommand != null)) {
+                    this.Adapter.UpdateCommand.Connection = value;
+                }
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    if ((this.CommandCollection[i] != null)) {
+                        ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
+                    }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        protected global::System.Data.SqlClient.SqlCommand[] CommandCollection {
+            get {
+                if ((this._commandCollection == null)) {
+                    this.InitCommandCollection();
+                }
+                return this._commandCollection;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        public bool ClearBeforeFill {
+            get {
+                return this._clearBeforeFill;
+            }
+            set {
+                this._clearBeforeFill = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        private void InitAdapter() {
+            this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
+            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
+            tableMapping.SourceTable = "Table";
+            tableMapping.DataSetTable = "Indices";
+            tableMapping.ColumnMappings.Add("TableName", "TableName");
+            tableMapping.ColumnMappings.Add("IndexName", "IndexName");
+            tableMapping.ColumnMappings.Add("Properties", "Properties");
+            tableMapping.ColumnMappings.Add("Columns", "Columns");
+            tableMapping.ColumnMappings.Add("IndexId", "IndexId");
+            tableMapping.ColumnMappings.Add("Description", "Description");
+            this._adapter.TableMappings.Add(tableMapping);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        private void InitConnection() {
+            this._connection = new global::System.Data.SqlClient.SqlConnection();
+            this._connection.ConnectionString = "Data Source=localhost";
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        private void InitCommandCollection() {
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[0].Connection = this.Connection;
+            this._commandCollection[0].CommandText = "SELECT o.NAME AS \'TableName\',\r\n       i.NAME AS \'IndexName\',\r\n       LOWER(i.type" +
+                "_desc) + CASE\r\n                                WHEN i.is_unique = 1 THEN\r\n      " +
+                "                              \', unique\'\r\n                                ELSE\r\n" +
+                "                                    \'\'\r\n                            END + CASE\r\n" +
+                "                                      WHEN i.is_primary_key = 1 THEN\r\n          " +
+                "                                \', primary key\'\r\n                               " +
+                "       ELSE\r\n                                          \'\'\r\n                     " +
+                "             END AS \'Properties\',\r\n       STUFF(\r\n       (\r\n           SELECT \'," +
+                " \' + sc.NAME AS \"text()\"\r\n           FROM syscolumns AS sc\r\n               INNER" +
+                " JOIN sys.index_columns AS ic\r\n                   ON ic.object_id = sc.id\r\n     " +
+                "                 AND ic.column_id = sc.colid\r\n           WHERE sc.id = so.object" +
+                "_id\r\n                 AND ic.index_id = i1.indid\r\n                 AND ic.is_inc" +
+                "luded_column = 0\r\n           ORDER BY key_ordinal\r\n           FOR XML PATH(\'\')\r\n" +
+                "       ),\r\n       1,\r\n       2,\r\n       \'\'\r\n            ) AS \'Columns\',\r\n       " +
+                "i.index_id as IndexId,\r\n       cast(ep.value as varchar) as Description\r\nFROM sy" +
+                "sindexes AS i1\r\n    INNER JOIN sys.indexes AS i\r\n        ON i.object_id = i1.id\r" +
+                "\n           AND i.index_id = i1.indid\r\n    INNER JOIN sysobjects AS o\r\n        O" +
+                "N o.id = i1.id\r\n    INNER JOIN sys.objects AS so\r\n        ON so.object_id = o.id" +
+                "\r\n           AND is_ms_shipped = 0\r\n    INNER JOIN sys.schemas AS s\r\n        ON " +
+                "s.schema_id = so.schema_id\r\n    left outer join sys.objects so1\r\n        on i.ob" +
+                "ject_id = so1.parent_object_id\r\n           and i.name = so1.name\r\n    left outer" +
+                " join sys.extended_properties ep\r\n        on so1.object_id = ep.major_id\r\n      " +
+                "     and ep.name = \'MS_Description\'\r\nWHERE so.type = \'U\'\r\n      AND i1.indid < 2" +
+                "55\r\n      AND i1.STATUS & 64 = 0 --index with duplicates\r\n      AND i1.STATUS & " +
+                "8388608 = 0 --auto created index\r\n      AND i1.STATUS & 16777216 = 0 --stats no " +
+                "recompute\r\n      AND i.type_desc <> \'heap\'\r\n      AND so.NAME <> \'sysdiagrams\'\r\n" +
+                "Order by TableName,\r\n         IndexId";
+            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
+        public virtual DatabaseSchema.IndicesDataTable GetData() {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            DatabaseSchema.IndicesDataTable dataTable = new DatabaseSchema.IndicesDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+    }
+    
+    /// <summary>
+    ///Represents the connection and commands used to retrieve and save data.
+    ///</summary>
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DataObjectAttribute(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
+        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+    public partial class TablesTableAdapter : global::System.ComponentModel.Component {
         
         private global::System.Data.SqlClient.SqlDataAdapter _adapter;
         
@@ -3212,7 +3397,7 @@ namespace DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        internal global::System.Data.SqlClient.SqlConnection Connection {
+        public global::System.Data.SqlClient.SqlConnection Connection {
             get {
                 if ((this._connection == null)) {
                     this.InitConnection();
@@ -3303,7 +3488,7 @@ namespace DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = "";
+            this._connection.ConnectionString = "Data Source=localhost";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3312,10 +3497,29 @@ namespace DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"select t.name as TableName, 'BASE TABLE' as Type, cast(ep.value as varchar) as Description from sys.tables t left outer join sys.extended_properties ep on t.object_id= ep.major_id and ep.minor_id = 0 and ep.name ='MS_Description'
-union
-select v.name as TableName, 'VIEW' as Type, cast(ep.value as varchar) as Description from sys.views v left outer join sys.extended_properties ep on v.object_id= ep.major_id and ep.minor_id = 0 and ep.name ='MS_Description'
-";
+            this._commandCollection[0].CommandText = @"SELECT TableName,
+       Type,
+       Description
+FROM
+(
+    SELECT t.name AS TableName,
+           'BASE TABLE' AS Type,
+           CAST(ep.value AS varchar) AS Description
+    FROM sys.tables AS t
+        LEFT OUTER JOIN sys.extended_properties AS ep
+            ON t.object_id = ep.major_id
+               AND ep.minor_id = 0
+               AND ep.name = 'MS_Description'
+    UNION
+    SELECT v.name AS TableName,
+           'VIEW' AS Type,
+           CAST(ep.value AS varchar) AS Description
+    FROM sys.views AS v
+        LEFT OUTER JOIN sys.extended_properties AS ep
+            ON v.object_id = ep.major_id
+               AND ep.minor_id = 0
+               AND ep.name = 'MS_Description'
+) AS Tables";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -3340,7 +3544,7 @@ select v.name as TableName, 'VIEW' as Type, cast(ep.value as varchar) as Descrip
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    internal partial class ColumnsTableAdapter : global::System.ComponentModel.Component {
+    public partial class ColumnsTableAdapter : global::System.ComponentModel.Component {
         
         private global::System.Data.SqlClient.SqlDataAdapter _adapter;
         
@@ -3371,7 +3575,7 @@ select v.name as TableName, 'VIEW' as Type, cast(ep.value as varchar) as Descrip
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        internal global::System.Data.SqlClient.SqlConnection Connection {
+        public global::System.Data.SqlClient.SqlConnection Connection {
             get {
                 if ((this._connection == null)) {
                     this.InitConnection();
@@ -3472,7 +3676,7 @@ select v.name as TableName, 'VIEW' as Type, cast(ep.value as varchar) as Descrip
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = "";
+            this._connection.ConnectionString = "Data Source=localhost";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3481,35 +3685,26 @@ select v.name as TableName, 'VIEW' as Type, cast(ep.value as varchar) as Descrip
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"select table_name as TableName,
-Column_name as ColumnName,
-ordinal_position as ColumnIndex,
-column_default as DefaultValue,
-CASE 
-WHEN SchemaCol.IS_NULLABLE = 'YES' THEN 1
-WHEN SchemaCol.IS_NULLABLE = 'NO' THEN 0
-ELSE NULL
-END AS IsNullable,
-Data_type as DataType,
-numeric_precision as NumericPrecision,
-numeric_scale as NumericScale,
-Character_Maximum_length as MaxTextLength,
-collation_name as TextCollation,
-itab.IsIdentity as IsIdentity,
-itab.Description as Description,
-itab.ColumnId	
-from INFORMATION_SCHEMA.COLUMNS SchemaCol 
-left outer join (
-select tab.name as TableName, col.name as ColumnName, col.is_identity as IsIdentity, col.is_nullable as IsNullable
-, cast(ep.value as varchar) as Description,
-col.column_id as ColumnId
-                from sys.columns col
-                inner join sys.tables tab on col.object_id = tab.object_id
-				left outer join sys.extended_properties ep on col.object_id = ep.major_id and col.column_id= ep.minor_id and ep.name = 'MS_Description'
-                where tab.type = 'U'
-				
-) itab on SchemaCol.TABLE_NAME = itab.TableName and SchemaCol.COLUMN_NAME = itab.ColumnName
-order by TableName, ColumnIndex";
+            this._commandCollection[0].CommandText = "select table_name as TableName,\r\n       Column_name as ColumnName,\r\n       ordina" +
+                "l_position as ColumnIndex,\r\n       column_default as DefaultValue,\r\n       CASE\r" +
+                "\n           WHEN SchemaCol.IS_NULLABLE = \'YES\' THEN\r\n               1\r\n         " +
+                "  WHEN SchemaCol.IS_NULLABLE = \'NO\' THEN\r\n               0\r\n           ELSE\r\n   " +
+                "            NULL\r\n       END AS IsNullable,\r\n       Data_type as DataType,\r\n    " +
+                "   numeric_precision as NumericPrecision,\r\n       numeric_scale as NumericScale," +
+                "\r\n       Character_Maximum_length as MaxTextLength,\r\n       collation_name as Te" +
+                "xtCollation,\r\n       itab.IsIdentity as IsIdentity,\r\n       itab.Description as " +
+                "Description,\r\n       itab.ColumnId\r\nfrom INFORMATION_SCHEMA.COLUMNS SchemaCol\r\n " +
+                "   left outer join\r\n    (\r\n        select tab.name as TableName,\r\n              " +
+                " col.name as ColumnName,\r\n               col.is_identity as IsIdentity,\r\n       " +
+                "        col.is_nullable as IsNullable,\r\n               cast(ep.value as varchar)" +
+                " as Description,\r\n               col.column_id as ColumnId\r\n        from sys.col" +
+                "umns col\r\n            inner join sys.tables tab\r\n                on col.object_i" +
+                "d = tab.object_id\r\n            left outer join sys.extended_properties ep\r\n     " +
+                "           on col.object_id = ep.major_id\r\n                   and col.column_id " +
+                "= ep.minor_id\r\n                   and ep.name = \'MS_Description\'\r\n        where " +
+                "tab.type = \'U\'\r\n    ) itab\r\n        on SchemaCol.TABLE_NAME = itab.TableName\r\n  " +
+                "         and SchemaCol.COLUMN_NAME = itab.ColumnName\r\norder by TableName,\r\n     " +
+                "    ColumnIndex";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -3534,194 +3729,7 @@ order by TableName, ColumnIndex";
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    internal partial class IndicesTableAdapter : global::System.ComponentModel.Component {
-        
-        private global::System.Data.SqlClient.SqlDataAdapter _adapter;
-        
-        private global::System.Data.SqlClient.SqlConnection _connection;
-        
-        private global::System.Data.SqlClient.SqlTransaction _transaction;
-        
-        private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
-        
-        private bool _clearBeforeFill;
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public IndicesTableAdapter() {
-            this.ClearBeforeFill = true;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
-            get {
-                if ((this._adapter == null)) {
-                    this.InitAdapter();
-                }
-                return this._adapter;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        internal global::System.Data.SqlClient.SqlConnection Connection {
-            get {
-                if ((this._connection == null)) {
-                    this.InitConnection();
-                }
-                return this._connection;
-            }
-            set {
-                this._connection = value;
-                if ((this.Adapter.InsertCommand != null)) {
-                    this.Adapter.InsertCommand.Connection = value;
-                }
-                if ((this.Adapter.DeleteCommand != null)) {
-                    this.Adapter.DeleteCommand.Connection = value;
-                }
-                if ((this.Adapter.UpdateCommand != null)) {
-                    this.Adapter.UpdateCommand.Connection = value;
-                }
-                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
-                    if ((this.CommandCollection[i] != null)) {
-                        ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
-                    }
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        internal global::System.Data.SqlClient.SqlTransaction Transaction {
-            get {
-                return this._transaction;
-            }
-            set {
-                this._transaction = value;
-                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
-                    this.CommandCollection[i].Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.DeleteCommand != null))) {
-                    this.Adapter.DeleteCommand.Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.InsertCommand != null))) {
-                    this.Adapter.InsertCommand.Transaction = this._transaction;
-                }
-                if (((this.Adapter != null) 
-                            && (this.Adapter.UpdateCommand != null))) {
-                    this.Adapter.UpdateCommand.Transaction = this._transaction;
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        protected global::System.Data.SqlClient.SqlCommand[] CommandCollection {
-            get {
-                if ((this._commandCollection == null)) {
-                    this.InitCommandCollection();
-                }
-                return this._commandCollection;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public bool ClearBeforeFill {
-            get {
-                return this._clearBeforeFill;
-            }
-            set {
-                this._clearBeforeFill = value;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private void InitAdapter() {
-            this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
-            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
-            tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "Indices";
-            tableMapping.ColumnMappings.Add("TableName", "TableName");
-            tableMapping.ColumnMappings.Add("IndexName", "IndexName");
-            tableMapping.ColumnMappings.Add("Properties", "Properties");
-            tableMapping.ColumnMappings.Add("Columns", "Columns");
-            tableMapping.ColumnMappings.Add("IndexId", "IndexId");
-            tableMapping.ColumnMappings.Add("Description", "Description");
-            this._adapter.TableMappings.Add(tableMapping);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private void InitConnection() {
-            this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = "";
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
-            this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
-            this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT o.NAME AS \'TableName\'\r\n                    ,+ i.NAME AS \'IndexName\'\r\n     " +
-                "               ,LOWER(i.type_desc) + CASE \r\n                        WHEN i.is_un" +
-                "ique = 1\r\n                            THEN \', unique\'\r\n                        E" +
-                "LSE \'\'\r\n                        END + CASE \r\n                        WHEN i.is_p" +
-                "rimary_key = 1\r\n                            THEN \', primary key\'\r\n              " +
-                "          ELSE \'\'\r\n                        END AS \'Properties\'\r\n                " +
-                "    ,STUFF((\r\n                            SELECT \', \' + sc.NAME AS \"text()\"\r\n   " +
-                "                         FROM syscolumns AS sc\r\n                            INNE" +
-                "R JOIN sys.index_columns AS ic ON ic.object_id = sc.id\r\n                        " +
-                "        AND ic.column_id = sc.colid\r\n                            WHERE sc.id = s" +
-                "o.object_id\r\n                                AND ic.index_id = i1.indid\r\n       " +
-                "                         AND ic.is_included_column = 0\r\n                        " +
-                "    ORDER BY key_ordinal\r\n                            FOR XML PATH(\'\')\r\n        " +
-                "                    ), 1, 2, \'\') AS \'Columns\'\r\n                            , i.i" +
-                "ndex_id as IndexId\r\n                            , cast(ep.value as varchar) as D" +
-                "escription\r\n                FROM sysindexes AS i1\r\n                INNER JOIN sy" +
-                "s.indexes AS i ON i.object_id = i1.id\r\n                    AND i.index_id = i1.i" +
-                "ndid\r\n                INNER JOIN sysobjects AS o ON o.id = i1.id\r\n              " +
-                "  INNER JOIN sys.objects AS so ON so.object_id = o.id\r\n                    AND i" +
-                "s_ms_shipped = 0\r\n                INNER JOIN sys.schemas AS s ON s.schema_id = s" +
-                "o.schema_id\r\n                left outer join sys.objects so1 on i.object_id = so" +
-                "1.parent_object_id and i.name = so1.name\r\n                left outer join sys.ex" +
-                "tended_properties ep on so1.object_id = ep.major_id and ep.name =\'MS_Description" +
-                "\'\r\n                WHERE so.type = \'U\'\r\n                    AND i1.indid < 255\r\n" +
-                "                    AND i1.STATUS & 64 = 0 --index with duplicates\r\n            " +
-                "        AND i1.STATUS & 8388608 = 0 --auto created index\r\n                    AN" +
-                "D i1.STATUS & 16777216 = 0 --stats no recompute\r\n                    AND i.type_" +
-                "desc <> \'heap\'\r\n                    AND so.NAME <> \'sysdiagrams\'\r\nOrder by Table" +
-                "Name, IndexId";
-            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual DatabaseSchema.IndicesDataTable GetData() {
-            this.Adapter.SelectCommand = this.CommandCollection[0];
-            DatabaseSchema.IndicesDataTable dataTable = new DatabaseSchema.IndicesDataTable();
-            this.Adapter.Fill(dataTable);
-            return dataTable;
-        }
-    }
-    
-    /// <summary>
-    ///Represents the connection and commands used to retrieve and save data.
-    ///</summary>
-    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
-    [global::System.ComponentModel.ToolboxItem(true)]
-    [global::System.ComponentModel.DataObjectAttribute(true)]
-    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
-        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
-    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    internal partial class ForeignKeysTableAdapter : global::System.ComponentModel.Component {
+    public partial class ForeignKeysTableAdapter : global::System.ComponentModel.Component {
         
         private global::System.Data.SqlClient.SqlDataAdapter _adapter;
         
@@ -3752,7 +3760,7 @@ order by TableName, ColumnIndex";
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        internal global::System.Data.SqlClient.SqlConnection Connection {
+        public global::System.Data.SqlClient.SqlConnection Connection {
             get {
                 if ((this._connection == null)) {
                     this.InitConnection();
@@ -3848,7 +3856,7 @@ order by TableName, ColumnIndex";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = "";
+            this._connection.ConnectionString = "Data Source=localhost";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3857,25 +3865,25 @@ order by TableName, ColumnIndex";
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"     SELECT 	 
-                   f.name as ForeignKeyName,
-                   OBJECT_NAME(f.parent_object_id) SourceTableName,
-                   COL_NAME(fc.parent_object_id, fc.parent_column_id) as ColumName,
-                   OBJECT_NAME (f.referenced_object_id) as TargetTableName      
-				   , f.key_index_id as TargetTableIndexId
-				   , fc.parent_column_id as SourceColumnIndex
-				   , fc.referenced_column_id as TargetColumnIndex
-				   , cast(ep.value as varchar) as Description
-                FROM 
-                   sys.foreign_keys AS f
-                INNER JOIN 
-                   sys.foreign_key_columns AS fc 
-                      ON f.OBJECT_ID = fc.constraint_object_id
-				    left outer join sys.extended_properties ep on f.object_id = ep.major_id and ep.name= 'MS_Description'
-                INNER JOIN 
-                   sys.tables t 
-                      ON t.OBJECT_ID = fc.referenced_object_id
-order by SourceTableName, TargetTableName, SourceColumnIndex";
+            this._commandCollection[0].CommandText = @"SELECT f.name as ForeignKeyName,
+       OBJECT_NAME(f.parent_object_id) SourceTableName,
+       COL_NAME(fc.parent_object_id, fc.parent_column_id) as ColumName,
+       OBJECT_NAME(f.referenced_object_id) as TargetTableName,
+       f.key_index_id as TargetTableIndexId,
+       fc.parent_column_id as SourceColumnIndex,
+       fc.referenced_column_id as TargetColumnIndex,
+       cast(ep.value as varchar) as Description
+FROM sys.foreign_keys AS f
+    INNER JOIN sys.foreign_key_columns AS fc
+        ON f.OBJECT_ID = fc.constraint_object_id
+    left outer join sys.extended_properties ep
+        on f.object_id = ep.major_id
+           and ep.name = 'MS_Description'
+    INNER JOIN sys.tables t
+        ON t.OBJECT_ID = fc.referenced_object_id
+order by SourceTableName,
+         TargetTableName,
+         SourceColumnIndex";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -3900,7 +3908,7 @@ order by SourceTableName, TargetTableName, SourceColumnIndex";
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    internal partial class ChecksTableAdapter : global::System.ComponentModel.Component {
+    public partial class ChecksTableAdapter : global::System.ComponentModel.Component {
         
         private global::System.Data.SqlClient.SqlDataAdapter _adapter;
         
@@ -3931,7 +3939,7 @@ order by SourceTableName, TargetTableName, SourceColumnIndex";
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        internal global::System.Data.SqlClient.SqlConnection Connection {
+        public global::System.Data.SqlClient.SqlConnection Connection {
             get {
                 if ((this._connection == null)) {
                     this.InitConnection();
@@ -4023,7 +4031,7 @@ order by SourceTableName, TargetTableName, SourceColumnIndex";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = "";
+            this._connection.ConnectionString = "Data Source=localhost";
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4032,13 +4040,19 @@ order by SourceTableName, TargetTableName, SourceColumnIndex";
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"select cc.name as CheckName, t.name as TableName, cc.Definition, cast(ep.value as varchar) as Description
+            this._commandCollection[0].CommandText = @"select cc.name as CheckName,
+       t.name as TableName,
+       cc.Definition,
+       cast(ep.value as varchar) as Description
 from sys.check_constraints cc
-inner join sys.tables t on cc.parent_object_id = t.object_id
-left outer join sys.extended_properties ep on cc.object_id = ep.major_id and ep.name= 'MS_Description'
-where t.type='U'
-order by TableName, CheckName
-";
+    inner join sys.tables t
+        on cc.parent_object_id = t.object_id
+    left outer join sys.extended_properties ep
+        on cc.object_id = ep.major_id
+           and ep.name = 'MS_Description'
+where t.type = 'U'
+order by TableName,
+         CheckName";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -4062,7 +4076,7 @@ order by TableName, CheckName
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerDesigner, Microsoft.VSD" +
         "esigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapterManager")]
-    internal partial class TableAdapterManager : global::System.ComponentModel.Component {
+    public partial class TableAdapterManager : global::System.ComponentModel.Component {
         
         private UpdateOrderOption _updateOrder;
         

@@ -1,18 +1,19 @@
-﻿namespace DoenaSoft.SqlServerDatabaseMeta
+﻿namespace DoenaSoft.SqlServerDatabaseMeta;
+
+internal struct ForeignKeyColumnReferenceIndexes
 {
-    internal struct ForeignKeyColumnReferenceIndexes
+    public int SourceColumnId { get; }
+
+    public int TargetColumnId { get; }
+
+    public ForeignKeyColumnReferenceIndexes(int sourceColumnId
+        , int targetColumnId)
     {
-        public int SourceColumnId { get; }
+        this.SourceColumnId = sourceColumnId;
 
-        public int TargetColumnId { get; }
-
-        public ForeignKeyColumnReferenceIndexes(int sourceColumnId, int targetColumnId)
-        {
-            this.SourceColumnId = sourceColumnId;
-
-            this.TargetColumnId = targetColumnId;
-        }
-
-        public override string ToString() => $"{SourceColumnId} -> {TargetColumnId}";
+        this.TargetColumnId = targetColumnId;
     }
+
+    public override string ToString()
+        => $"{this.SourceColumnId} -> {this.TargetColumnId}";
 }

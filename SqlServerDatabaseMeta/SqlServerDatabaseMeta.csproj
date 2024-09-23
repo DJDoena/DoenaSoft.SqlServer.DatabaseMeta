@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup Label="Globals">
-		<Configurations>Debug;Release</Configurations>
-	</PropertyGroup>
-
 	<PropertyGroup>
-		<TargetFrameworks>net452;net472;net48;netcoreapp3.1;net5.0;net6.0;net7.0;</TargetFrameworks>
+		<TargetFrameworks>net472;net6.0</TargetFrameworks>
+		<LangVersion>10.0</LangVersion>
 		<RootNamespace>DoenaSoft.SqlServerDatabaseMeta</RootNamespace>
 		<AssemblyName>DoenaSoft.SqlServerDatabaseMeta</AssemblyName>
 		<Authors>DJ Doena</Authors>
@@ -19,7 +16,7 @@
 		<RepositoryUrl>https://github.com/DJDoena/DoenaSoft.SqlServer.DatabaseMeta</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>sqlserver;sql-server</PackageTags>
-		<Version>1.0.2</Version>
+		<Version>1.1.0</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -35,22 +32,22 @@
 
 	<ItemGroup>
 		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="DatabaseSchema.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>DatabaseSchema.xsd</DependentUpon>
-		</Compile>
+	  <Compile Update="DatabaseSchema.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>DatabaseSchema.xsd</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="DatabaseSchema.xsd">
-			<Generator>MSDataSetGenerator</Generator>
-			<LastGenOutput>DatabaseSchema.Designer.cs</LastGenOutput>
-		</None>
+	  <None Update="DatabaseSchema.xsd">
+	    <Generator>MSDataSetGenerator</Generator>
+	    <LastGenOutput>DatabaseSchema.Designer.cs</LastGenOutput>
+	  </None>
 	</ItemGroup>
 
 </Project>
