@@ -3,6 +3,7 @@
 name: NuGet Generation for DoenaSoft
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
