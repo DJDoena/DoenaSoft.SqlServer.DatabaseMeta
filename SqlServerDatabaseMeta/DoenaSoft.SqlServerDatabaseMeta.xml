@@ -622,5 +622,35 @@
             <param name="tableMeta">table / view</param>
             <returns>A list of all the meta objects related to the input.</returns>
         </member>
+        <member name="T:DoenaSoft.SqlServerDatabaseMeta.Queries">
+            <summary>
+            Contains the SQL queries executed for this library
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.Queries.Tables">
+            <summary>
+            Tables and Views
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.Queries.Columns">
+            <summary>
+            Columns
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.Queries.ForeignKeys">
+            <summary>
+            Foreign Keys
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.Queries.Indices">
+            <summary>
+            Indices (Indexes)
+            </summary>
+        </member>
+        <member name="F:DoenaSoft.SqlServerDatabaseMeta.Queries.Checks">
+            <summary>
+            Checks
+            </summary>
+        </member>
     </members>
 </doc>
