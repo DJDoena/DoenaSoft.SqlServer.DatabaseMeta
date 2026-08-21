@@ -26,6 +26,11 @@ public interface IIndexMeta : IMetaBase
     IReadOnlyList<IColumnMeta> Columns { get; }
 
     /// <summary>
+    /// The non-key columns included in the index (covering index columns).
+    /// </summary>
+    IReadOnlyList<IColumnMeta> IncludedColumns { get; }
+
+    /// <summary>
     /// Gives information about the type of the index.
     /// </summary>
     IndexType Properties { get; }

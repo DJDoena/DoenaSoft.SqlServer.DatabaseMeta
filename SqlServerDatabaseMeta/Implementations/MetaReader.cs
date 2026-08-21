@@ -220,13 +220,19 @@ public class MetaReader : IMetaReader
 
         var columns = columnNames.Select(cn => table.Columms.First(c => c.Name.Equals(cn, StringComparison.OrdinalIgnoreCase))).ToList();
 
+        var includedColumnNames = row.IsIncludedColumnsNull()
+            ? Enumerable.Empty<string>()
+            : row.IncludedColumns.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim());
+
+        var includedColumns = includedColumnNames.Select(cn => table.Columms.First(c => c.Name.Equals(cn, StringComparison.OrdinalIgnoreCase))).ToList();
+
         var propertyTags = row.Properties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
 
         var description = row.IsDescriptionNull()
             ? null
             : row.Description;
 
-        table.AddIndex(new IndexMeta(row.IndexName, description, table, row.IndexId, columns, propertyTags));
+        table.AddIndex(new IndexMeta(row.IndexName, description, table, row.IndexId, columns, includedColumns, propertyTags));
     }
 
     private void AddChecks()

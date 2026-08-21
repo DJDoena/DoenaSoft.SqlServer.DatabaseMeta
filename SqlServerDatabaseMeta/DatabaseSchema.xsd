@@ -42,6 +42,23 @@
        2,
        ''
             ) AS 'Columns',
+       STUFF(
+       (
+           SELECT ', ' + sc.NAME AS "text()"
+           FROM syscolumns AS sc
+               INNER JOIN sys.index_columns AS ic
+                   ON ic.object_id = sc.id
+                      AND ic.column_id = sc.colid
+           WHERE sc.id = so.object_id
+                 AND ic.index_id = i1.indid
+                 AND ic.is_included_column = 1
+           ORDER BY index_column_id
+           FOR XML PATH('')
+       ),
+       1,
+       2,
+       ''
+            ) AS 'IncludedColumns',
        i.index_id as IndexId,
        cast(ep.value as varchar) as Description
 FROM sysindexes AS i1
@@ -80,6 +97,7 @@ Order by TableName,
               <Mapping SourceColumn="IndexName" DataSetColumn="IndexName" />
               <Mapping SourceColumn="Properties" DataSetColumn="Properties" />
               <Mapping SourceColumn="Columns" DataSetColumn="Columns" />
+              <Mapping SourceColumn="IncludedColumns" DataSetColumn="IncludedColumns" />
               <Mapping SourceColumn="IndexId" DataSetColumn="IndexId" />
               <Mapping SourceColumn="Description" DataSetColumn="Description" />
             </Mappings>
@@ -299,6 +317,13 @@ order by TableName,
                 </xs:simpleType>
               </xs:element>
               <xs:element name="Columns" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="ColumnsColumn" msprop:Generator_ColumnPropNameInRow="Columns" msprop:Generator_UserColumnName="Columns" msprop:Generator_ColumnVarNameInTable="columnColumns" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="IncludedColumns" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="IncludedColumnsColumn" msprop:Generator_ColumnPropNameInRow="IncludedColumns" msprop:Generator_UserColumnName="IncludedColumns" msprop:Generator_ColumnVarNameInTable="columnIncludedColumns" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="2147483647" />

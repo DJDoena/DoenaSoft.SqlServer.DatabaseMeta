@@ -11,6 +11,8 @@ internal sealed class IndexMeta : MetaBase, IIndexMeta
 
     public IReadOnlyList<IColumnMeta> Columns { get; }
 
+    public IReadOnlyList<IColumnMeta> IncludedColumns { get; }
+
     public IndexType Properties { get; }
 
     internal IndexMeta(string name
@@ -18,12 +20,14 @@ internal sealed class IndexMeta : MetaBase, IIndexMeta
         , ITableMeta table
         , int indexId
         , List<IColumnMeta> columns
+        , List<IColumnMeta> includedColumns
         , List<string> propertyTags)
         : base(name, description)
     {
         this.Table = table;
         this.IndexId = indexId;
         this.Columns = columns.AsReadOnly();
+        this.IncludedColumns = includedColumns.AsReadOnly();
         this.Properties = GetPropertyFlags(propertyTags);
     }
 

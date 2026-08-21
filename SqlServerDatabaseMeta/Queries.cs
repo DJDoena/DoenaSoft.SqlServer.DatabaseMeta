@@ -89,33 +89,81 @@ order by SourceTableName,
     /// <summary>
     /// Indices (Indexes)
     /// </summary>
-    public const string Indices = "SELECT o.NAME AS \'TableName\',\r\n       i.NAME AS \'IndexName\',\r\n       LOWER(i.type" +
-                "_desc) + CASE\r\n                                WHEN i.is_unique = 1 THEN\r\n      " +
-                "                              \', unique\'\r\n                                ELSE\r\n" +
-                "                                    \'\'\r\n                            END + CASE\r\n" +
-                "                                      WHEN i.is_primary_key = 1 THEN\r\n          " +
-                "                                \', primary key\'\r\n                               " +
-                "       ELSE\r\n                                          \'\'\r\n                     " +
-                "             END AS \'Properties\',\r\n       STUFF(\r\n       (\r\n           SELECT \'," +
-                " \' + sc.NAME AS \"text()\"\r\n           FROM syscolumns AS sc\r\n               INNER" +
-                " JOIN sys.index_columns AS ic\r\n                   ON ic.object_id = sc.id\r\n     " +
-                "                 AND ic.column_id = sc.colid\r\n           WHERE sc.id = so.object" +
-                "_id\r\n                 AND ic.index_id = i1.indid\r\n                 AND ic.is_inc" +
-                "luded_column = 0\r\n           ORDER BY key_ordinal\r\n           FOR XML PATH(\'\')\r\n" +
-                "       ),\r\n       1,\r\n       2,\r\n       \'\'\r\n            ) AS \'Columns\',\r\n       " +
-                "i.index_id as IndexId,\r\n       cast(ep.value as varchar) as Description\r\nFROM sy" +
-                "sindexes AS i1\r\n    INNER JOIN sys.indexes AS i\r\n        ON i.object_id = i1.id\r" +
-                "\n           AND i.index_id = i1.indid\r\n    INNER JOIN sysobjects AS o\r\n        O" +
-                "N o.id = i1.id\r\n    INNER JOIN sys.objects AS so\r\n        ON so.object_id = o.id" +
-                "\r\n           AND is_ms_shipped = 0\r\n    INNER JOIN sys.schemas AS s\r\n        ON " +
-                "s.schema_id = so.schema_id\r\n    left outer join sys.objects so1\r\n        on i.ob" +
-                "ject_id = so1.parent_object_id\r\n           and i.name = so1.name\r\n    left outer" +
-                " join sys.extended_properties ep\r\n        on so1.object_id = ep.major_id\r\n      " +
-                "     and ep.name = \'MS_Description\'\r\nWHERE so.type = \'U\'\r\n      AND i1.indid < 2" +
-                "55\r\n      AND i1.STATUS & 64 = 0 --index with duplicates\r\n      AND i1.STATUS & " +
-                "8388608 = 0 --auto created index\r\n      AND i1.STATUS & 16777216 = 0 --stats no " +
-                "recompute\r\n      AND i.type_desc <> \'heap\'\r\n      AND so.NAME <> \'sysdiagrams\'\r\n" +
-                "Order by TableName,\r\n         IndexId";
+    public const string Indices = @"SELECT o.NAME AS 'TableName',
+       i.NAME AS 'IndexName',
+       LOWER(i.type_desc) + CASE
+                                WHEN i.is_unique = 1 THEN
+                                    ', unique'
+                                ELSE
+                                    ''
+                            END + CASE
+                                      WHEN i.is_primary_key = 1 THEN
+                                          ', primary key'
+                                      ELSE
+                                          ''
+                                  END AS 'Properties',
+       STUFF(
+       (
+           SELECT ', ' + sc.NAME AS ""text()""
+           FROM syscolumns AS sc
+               INNER JOIN sys.index_columns AS ic
+                   ON ic.object_id = sc.id
+                      AND ic.column_id = sc.colid
+           WHERE sc.id = so.object_id
+                 AND ic.index_id = i1.indid
+                 AND ic.is_included_column = 0
+           ORDER BY key_ordinal
+           FOR XML PATH('')
+       ),
+       1,
+       2,
+       ''
+            ) AS 'Columns',
+       STUFF(
+       (
+           SELECT ', ' + sc.NAME AS ""text()""
+           FROM syscolumns AS sc
+               INNER JOIN sys.index_columns AS ic
+                   ON ic.object_id = sc.id
+                      AND ic.column_id = sc.colid
+           WHERE sc.id = so.object_id
+                 AND ic.index_id = i1.indid
+                 AND ic.is_included_column = 1
+           ORDER BY index_column_id
+           FOR XML PATH('')
+       ),
+       1,
+       2,
+       ''
+            ) AS 'IncludedColumns',
+       i.index_id as IndexId,
+       cast(ep.value as varchar) as Description
+FROM sysindexes AS i1
+    INNER JOIN sys.indexes AS i
+        ON i.object_id = i1.id
+           AND i.index_id = i1.indid
+    INNER JOIN sysobjects AS o
+        ON o.id = i1.id
+    INNER JOIN sys.objects AS so
+        ON so.object_id = o.id
+           AND is_ms_shipped = 0
+    INNER JOIN sys.schemas AS s
+        ON s.schema_id = so.schema_id
+    left outer join sys.objects so1
+        on i.object_id = so1.parent_object_id
+           and i.name = so1.name
+    left outer join sys.extended_properties ep
+        on so1.object_id = ep.major_id
+           and ep.name = 'MS_Description'
+WHERE so.type = 'U'
+      AND i1.indid < 255
+      AND i1.STATUS & 64 = 0 --index with duplicates
+      AND i1.STATUS & 8388608 = 0 --auto created index
+      AND i1.STATUS & 16777216 = 0 --stats no recompute
+      AND i.type_desc <> 'heap'
+      AND so.NAME <> 'sysdiagrams'
+Order by TableName,
+         IndexId";
 
     /// <summary>
     /// Checks

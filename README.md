@@ -11,7 +11,7 @@ A .NET library that provides read-only access to SQL Server database metadata, e
 - **Columns**: Access column metadata including data types, nullability, defaults, and identity columns
 - **Primary Keys**: Discover primary key constraints
 - **Foreign Keys**: Read foreign key relationships and establish links between tables
-- **Indexes**: Query index definitions including unique and primary key indexes
+- **Indexes**: Query index definitions including unique, primary key, and covering indexes (key columns and included columns)
 - **Check Constraints**: Access check constraint definitions
 
 ## Supported Frameworks
@@ -117,10 +117,13 @@ foreach (var table in tables)
     foreach (var index in table.Indexes)
     {
         Console.WriteLine($"Index: {index.Name}");
-        Console.WriteLine($"  Type: {index.Type}");
-        Console.WriteLine($"  Is Unique: {index.IsUnique}");
-        Console.WriteLine($"  Is Primary Key: {index.IsPrimaryKey}");
-        Console.WriteLine($"  Columns: {string.Join(", ", index.Columns)}");
+        Console.WriteLine($"  Properties: {index.Properties}");
+        Console.WriteLine($"  Columns: {string.Join(", ", index.Columns.Select(c => c.Name))}");
+
+        if (index.IncludedColumns.Count > 0)
+        {
+            Console.WriteLine($"  Included Columns: {string.Join(", ", index.IncludedColumns.Select(c => c.Name))}");
+        }
     }
 }
 ```
@@ -262,8 +265,25 @@ SELECT o.NAME AS 'TableName',
        2,
        ''
             ) AS 'Columns',
-       i.index_id as IndexId,
-       cast(ep.value as varchar) as Description
+       STUFF(
+       (
+           SELECT ', ' + sc.NAME AS "text()"
+           FROM syscolumns AS sc
+               INNER JOIN sys.index_columns AS ic
+                   ON ic.object_id = sc.id
+                      AND ic.column_id = sc.colid
+           WHERE sc.id = so.object_id
+                 AND ic.index_id = i1.indid
+                 AND ic.is_included_column = 1
+           ORDER BY index_column_id
+           FOR XML PATH('')
+       ),
+       1,
+       2,
+       ''
+            ) AS 'IncludedColumns',
+       i.index_id AS IndexId,
+       CAST(ep.value AS varchar) AS Description
 FROM sysindexes AS i1
     INNER JOIN sys.indexes AS i
         ON i.object_id = i1.id
@@ -375,10 +395,10 @@ Represents an index on a table.
 #### Properties
 
 - `string Name` - Index name
-- `string Type` - Index type (e.g., "clustered", "nonclustered")
-- `bool IsUnique` - Whether the index is unique
-- `bool IsPrimaryKey` - Whether the index is a primary key
-- `IReadOnlyList<string> Columns` - List of column names in the index
+- `int IndexId` - Internal database index Id
+- `IndexType Properties` - Flags describing the index type (Clustered, NonClustered, Unique, PrimaryKey)
+- `IReadOnlyList<IColumnMeta> Columns` - The key columns of the index
+- `IReadOnlyList<IColumnMeta> IncludedColumns` - Non-key columns included in the index (covering index columns); empty when none
 - `string Description` - Extended property description
 
 ### ICheckMeta Interface
@@ -414,6 +434,9 @@ Source code: [https://github.com/DJDoena/DoenaSoft.SqlServer.DatabaseMeta](https
 DJ Doena - Doena Soft.
 
 ## Changelog
+
+### Version 2.1.0
+- Added `IncludedColumns` property to `IIndexMeta` to expose non-key covering index columns
 
 ### Version 2.0.0
 - Multi-targeting support for .NET Framework 4.7.2 and .NET 10.0

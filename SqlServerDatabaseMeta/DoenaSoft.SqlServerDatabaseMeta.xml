@@ -181,6 +181,11 @@
             The indexed columns.
             </summary>
         </member>
+        <member name="P:DoenaSoft.SqlServerDatabaseMeta.IIndexMeta.IncludedColumns">
+            <summary>
+            The non-key columns included in the index (covering index columns).
+            </summary>
+        </member>
         <member name="P:DoenaSoft.SqlServerDatabaseMeta.IIndexMeta.Properties">
             <summary>
             Gives information about the type of the index.

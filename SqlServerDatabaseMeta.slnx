@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="SqlServerDatabaseMeta/SqlServerDatabaseMeta.csproj" />
+  <Project Path="TesterApp/TesterApp.csproj" Id="da1b1f36-e8b4-4cba-a9d3-ab4cba4ae8f7" />
 </Solution>
