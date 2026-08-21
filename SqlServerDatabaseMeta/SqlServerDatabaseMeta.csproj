@@ -16,7 +16,7 @@
 		<RepositoryUrl>https://github.com/DJDoena/DoenaSoft.SqlServer.DatabaseMeta</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>sqlserver;sql-server</PackageTags>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -35,23 +35,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="DatabaseSchema.Designer.cs">
-	    <DesignTime>True</DesignTime>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>DatabaseSchema.xsd</DependentUpon>
-	  </Compile>
-	</ItemGroup>
 
-	<ItemGroup>
-	  <None Update="DatabaseSchema.xsd">
-	    <Generator>MSDataSetGenerator</Generator>
-	    <LastGenOutput>DatabaseSchema.Designer.cs</LastGenOutput>
-	  </None>
-	</ItemGroup>
-
-</Project>
+	</Project>

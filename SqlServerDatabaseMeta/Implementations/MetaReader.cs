@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
-using DoenaSoft.SqlServerDatabaseMeta.DatabaseSchemaTableAdapters;
 
 namespace DoenaSoft.SqlServerDatabaseMeta;
 
@@ -52,7 +52,7 @@ public class MetaReader : IMetaReader
     {
         _connection = openConnection;
 
-        _meta = new Dictionary<string, TableMeta>();
+        _meta = [];
 
         this.AddTables();
 
@@ -71,82 +71,53 @@ public class MetaReader : IMetaReader
 
     private void AddTables()
     {
-        using var tableAdapter = new TablesTableAdapter()
-        {
-            Connection = _connection,
-        };
+        using var command = new SqlCommand(Queries.Tables, _connection);
 
-        using var dataTable = tableAdapter.GetData();
+        using var reader = command.ExecuteReader();
 
-        foreach (var row in dataTable.Rows.Cast<DatabaseSchema.TablesRow>())
+        while (reader.Read())
         {
-            this.AddTable(row);
+            var tableName = reader.GetString(reader.GetOrdinal("TableName"));
+            var type = reader.GetString(reader.GetOrdinal("Type"));
+            var description = GetNullableString(reader, "Description");
+
+            _meta.Add(tableName.ToLowerInvariant(), new TableMeta(tableName, description, type));
         }
-    }
-
-    private void AddTable(DatabaseSchema.TablesRow row)
-    {
-        var description = row.IsDescriptionNull()
-            ? null
-            : row.Description;
-
-        _meta.Add(row.TableName.ToLowerInvariant(), new TableMeta(row.TableName, description, row.Type));
     }
 
     private void AddColumns()
     {
-        using var tableAdapter = new ColumnsTableAdapter()
-        {
-            Connection = _connection,
-        };
+        using var command = new SqlCommand(Queries.Columns, _connection);
 
-        using var dataTable = tableAdapter.GetData();
+        using var reader = command.ExecuteReader();
 
-        foreach (var row in dataTable.Rows.Cast<DatabaseSchema.ColumnsRow>())
+        while (reader.Read())
         {
-            this.AddColumn(row);
+            this.AddColumn(reader);
         }
     }
 
-    private void AddColumn(DatabaseSchema.ColumnsRow row)
+    private void AddColumn(SqlDataReader reader)
     {
-        var table = _meta[row.TableName.ToLowerInvariant()];
+        var tableName = reader.GetString(reader.GetOrdinal("TableName"));
 
-        var description = row.IsDescriptionNull()
-            ? null
-            : row.Description;
+        var table = _meta[tableName.ToLowerInvariant()];
 
-        var columnId = row.IsColumnIdNull()
-            ? (int?)null
-            : row.ColumnId;
+        var columnName = reader.GetString(reader.GetOrdinal("ColumnName"));
+        var columnIndex = reader.GetInt32(reader.GetOrdinal("ColumnIndex"));
+        var defaultValue = GetNullableString(reader, "DefaultValue");
+        var isNullableInt = GetNullableInt(reader, "IsNullable");
+        var isNullable = Convert.ToBoolean(isNullableInt ?? 0);
+        var dataType = reader.GetString(reader.GetOrdinal("DataType"));
+        var numericPrecision = GetNullableInt(reader, "NumericPrecision");
+        var numericScale = GetNullableInt(reader, "NumericScale");
+        var maxTextLength = GetNullableInt(reader, "MaxTextLength");
+        var textCollation = GetNullableString(reader, "TextCollation");
+        var isIdentity = GetNullableBool(reader, "IsIdentity");
+        var description = GetNullableString(reader, "Description");
+        var columnId = GetNullableInt(reader, "ColumnId");
 
-        var defaultValue = row.IsDefaultValueNull()
-           ? null
-           : row.DefaultValue;
-
-        var isNullable = Convert.ToBoolean(row.IsNullable);
-
-        var isIdentity = row.IsIsIdentityNull()
-             ? (bool?)null
-            : row.IsIdentity;
-
-        var numericPrecision = row.IsNumericPrecisionNull()
-            ? (int?)null
-            : row.NumericPrecision;
-
-        var numericScale = row.IsNumericScaleNull()
-            ? (int?)null
-            : row.NumericScale;
-
-        var maxTextLength = row.IsMaxTextLengthNull()
-            ? (int?)null
-            : row.MaxTextLength;
-
-        var textCollation = row.IsTextCollationNull()
-            ? null
-            : row.TextCollation;
-
-        table.AddColumn(new ColumnMeta(row.ColumnName, description, table, row.ColumnIndex, columnId, row.DataType, defaultValue)
+        table.AddColumn(new ColumnMeta(columnName, description, table, columnIndex, columnId, dataType, defaultValue)
         {
             IsNullable = isNullable,
             IsIdentity = isIdentity,
@@ -159,14 +130,26 @@ public class MetaReader : IMetaReader
 
     private void AddForeignKeys()
     {
-        using var tableAdapter = new ForeignKeysTableAdapter()
+        var rows = new List<ForeignKeyRow>();
+
+        using var command = new SqlCommand(Queries.ForeignKeys, _connection);
+
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
         {
-            Connection = _connection,
-        };
+            rows.Add(new ForeignKeyRow(
+                foreignKeyName: reader.GetString(reader.GetOrdinal("ForeignKeyName"))
+                , sourceTableName: reader.GetString(reader.GetOrdinal("SourceTableName"))
+                , columnName: reader.GetString(reader.GetOrdinal("ColumName"))
+                , targetTableName: reader.GetString(reader.GetOrdinal("TargetTableName"))
+                , targetTableIndexId: reader.GetInt32(reader.GetOrdinal("TargetTableIndexId"))
+                , sourceColumnIndex: reader.GetInt32(reader.GetOrdinal("SourceColumnIndex"))
+                , targetColumnIndex: reader.GetInt32(reader.GetOrdinal("TargetColumnIndex"))
+                , description: GetNullableString(reader, "Description")));
+        }
 
-        using var dataTable = tableAdapter.GetData();
-
-        var rowGroups = dataTable.Rows.Cast<DatabaseSchema.ForeignKeysRow>().GroupBy(r => new Tuple<string, string>(r.SourceTableName, r.ForeignKeyName));
+        var rowGroups = rows.GroupBy(r => new Tuple<string, string>(r.SourceTableName, r.ForeignKeyName));
 
         foreach (var rowGroup in rowGroups)
         {
@@ -174,23 +157,19 @@ public class MetaReader : IMetaReader
         }
     }
 
-    private void AddForeignKey(IEnumerable<DatabaseSchema.ForeignKeysRow> keyGroup)
+    private void AddForeignKey(IEnumerable<ForeignKeyRow> keyGroup)
     {
         var first = keyGroup.First();
 
         var sourceTable = _meta[first.SourceTableName.ToLowerInvariant()];
 
-        var sourceColumns = keyGroup.Select(key => sourceTable.Columms.First(stc => stc.Name.Equals(key.ColumName, StringComparison.OrdinalIgnoreCase))).ToList();
+        var sourceColumns = keyGroup.Select(key => sourceTable.Columms.First(stc => stc.Name.Equals(key.ColumnName, StringComparison.OrdinalIgnoreCase))).ToList();
 
         var targetTable = _meta[first.TargetTableName.ToLowerInvariant()];
 
-        var description = first.IsDescriptionNull()
-            ? null
-            : first.Description;
-
         var columnReferenceIndexes = keyGroup.Select(key => new ForeignKeyColumnReferenceIndexes(key.SourceColumnIndex, key.TargetColumnIndex)).ToList();
 
-        var foreignKey = new ForeignKeyMeta(first.ForeignKeyName, description, sourceColumns, targetTable, first.TargetTableIndexId, columnReferenceIndexes);
+        var foreignKey = new ForeignKeyMeta(first.ForeignKeyName, first.Description, sourceColumns, targetTable, first.TargetTableIndexId, columnReferenceIndexes);
 
         sourceTable.AddOutgoingForeignKey(foreignKey);
 
@@ -199,69 +178,174 @@ public class MetaReader : IMetaReader
 
     private void AddIndices()
     {
-        using var tableAdapter = new IndicesTableAdapter()
-        {
-            Connection = _connection,
-        };
+        using var command = new SqlCommand(Queries.Indices, _connection);
 
-        using var dataTable = tableAdapter.GetData();
+        using var reader = command.ExecuteReader();
 
-        foreach (var row in dataTable.Rows.Cast<DatabaseSchema.IndicesRow>())
+        while (reader.Read())
         {
-            this.AddIndex(row);
+            this.AddIndex(reader);
         }
     }
 
-    private void AddIndex(DatabaseSchema.IndicesRow row)
+    private void AddIndex(SqlDataReader reader)
     {
-        var table = _meta[row.TableName.ToLowerInvariant()];
+        var tableName = reader.GetString(reader.GetOrdinal("TableName"));
 
-        var columnNames = row.Columns.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim());
+        var table = _meta[tableName.ToLowerInvariant()];
+
+        var columnNames = reader.GetString(reader.GetOrdinal("Columns"))
+            .Split([','], StringSplitOptions.RemoveEmptyEntries)
+            .Select(p => p.Trim());
 
         var columns = columnNames.Select(cn => table.Columms.First(c => c.Name.Equals(cn, StringComparison.OrdinalIgnoreCase))).ToList();
 
-        var includedColumnNames = row.IsIncludedColumnsNull()
-            ? Enumerable.Empty<string>()
-            : row.IncludedColumns.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim());
+        var rawIncluded = GetNullableString(reader, "IncludedColumns");
 
-        var includedColumns = includedColumnNames.Select(cn => table.Columms.First(c => c.Name.Equals(cn, StringComparison.OrdinalIgnoreCase))).ToList();
+        var includedColumns = rawIncluded == null
+            ? []
+            : rawIncluded.Split([','], StringSplitOptions.RemoveEmptyEntries)
+                         .Select(p => p.Trim())
+                         .Select(cn => table.Columms.First(c => c.Name.Equals(cn, StringComparison.OrdinalIgnoreCase)))
+                         .ToList<IColumnMeta>();
 
-        var propertyTags = row.Properties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToList();
+        var propertyTags = reader.GetString(reader.GetOrdinal("Properties"))
+            .Split([','], StringSplitOptions.RemoveEmptyEntries)
+            .Select(p => p.Trim())
+            .ToList();
 
-        var description = row.IsDescriptionNull()
-            ? null
-            : row.Description;
+        var indexId = reader.GetInt32(reader.GetOrdinal("IndexId"));
+        var description = GetNullableString(reader, "Description");
+        var indexName = reader.GetString(reader.GetOrdinal("IndexName"));
 
-        table.AddIndex(new IndexMeta(row.IndexName, description, table, row.IndexId, columns, includedColumns, propertyTags));
+        table.AddIndex(new IndexMeta(indexName, description, table, indexId, columns, includedColumns, propertyTags));
     }
 
     private void AddChecks()
     {
-        using var tableAdapter = new ChecksTableAdapter()
-        {
-            Connection = _connection,
-        };
+        using var command = new SqlCommand(Queries.Checks, _connection);
 
-        using var dataTable = tableAdapter.GetData();
+        using var reader = command.ExecuteReader();
 
-        foreach (var row in dataTable.Rows.Cast<DatabaseSchema.ChecksRow>())
+        while (reader.Read())
         {
-            this.AddCheck(row);
+            this.AddCheck(reader);
         }
     }
 
-    private void AddCheck(DatabaseSchema.ChecksRow row)
+    private void AddCheck(SqlDataReader reader)
     {
-        var table = _meta[row.TableName.ToLowerInvariant()];
+        var tableName = reader.GetString(reader.GetOrdinal("TableName"));
 
-        var definition = row.IsDefinitionNull()
+        var table = _meta[tableName.ToLowerInvariant()];
+
+        var checkName = reader.GetString(reader.GetOrdinal("CheckName"));
+        var definition = GetNullableString(reader, "Definition");
+        var description = GetNullableString(reader, "Description");
+
+        table.AddCheck(new CheckMeta(checkName, description, table, definition));
+    }
+
+    /// <inheritdoc/>
+    public IReadOnlyList<IScalarFunctionMeta> ReadScalarFunctions(string server, string database, string user, string password)
+    {
+        var result = this.ReadScalarFunctions($"Data Source={server};Initial Catalog={database};User ID={user};Password={password}");
+
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public IReadOnlyList<IScalarFunctionMeta> ReadScalarFunctions(string connectionString)
+    {
+        using var connection = new SqlConnection(connectionString);
+
+        connection.Open();
+
+        var result = this.ReadScalarFunctions(connection);
+
+        return result;
+    }
+
+    /// <inheritdoc/>
+    public virtual IReadOnlyList<IScalarFunctionMeta> ReadScalarFunctions(SqlConnection openConnection)
+    {
+        var functions = new List<IScalarFunctionMeta>();
+
+        using var command = new SqlCommand(Queries.ScalarFunctions, openConnection);
+
+        using var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            var schema = reader.GetString(reader.GetOrdinal("SchemaName"));
+            var name = reader.GetString(reader.GetOrdinal("FunctionName"));
+            var definition = GetNullableString(reader, "Definition");
+            var description = GetNullableString(reader, "Description");
+
+            functions.Add(new ScalarFunctionMeta(name, description, schema, definition));
+        }
+
+        var result = functions.AsReadOnly();
+
+        return result;
+    }
+
+    private static string GetNullableString(SqlDataReader reader, string columnName)
+    {
+        var ordinal = reader.GetOrdinal(columnName);
+
+        return reader.IsDBNull(ordinal)
             ? null
-            : row.Definition;
+            : reader.GetString(ordinal);
+    }
 
-        var description = row.IsDescriptionNull()
+    private static int? GetNullableInt(SqlDataReader reader, string columnName)
+    {
+        var ordinal = reader.GetOrdinal(columnName);
+
+        return reader.IsDBNull(ordinal)
             ? null
-            : row.Description;
+            : Convert.ToInt32(reader.GetValue(ordinal));
+    }
 
-        table.AddCheck(new CheckMeta(row.CheckName, description, table, definition));
+    private static bool? GetNullableBool(SqlDataReader reader, string columnName)
+    {
+        var ordinal = reader.GetOrdinal(columnName);
+
+        return reader.IsDBNull(ordinal)
+            ? null
+            : reader.GetBoolean(ordinal);
+    }
+
+    private sealed class ForeignKeyRow
+    {
+        public string ForeignKeyName { get; }
+        public string SourceTableName { get; }
+        public string ColumnName { get; }
+        public string TargetTableName { get; }
+        public int TargetTableIndexId { get; }
+        public int SourceColumnIndex { get; }
+        public int TargetColumnIndex { get; }
+        public string Description { get; }
+
+        [DebuggerStepThrough]
+        public ForeignKeyRow(string foreignKeyName
+            , string sourceTableName
+            , string columnName
+            , string targetTableName
+            , int targetTableIndexId
+            , int sourceColumnIndex
+            , int targetColumnIndex
+            , string description)
+        {
+            this.ForeignKeyName = foreignKeyName;
+            this.SourceTableName = sourceTableName;
+            this.ColumnName = columnName;
+            this.TargetTableName = targetTableName;
+            this.TargetTableIndexId = targetTableIndexId;
+            this.SourceColumnIndex = sourceColumnIndex;
+            this.TargetColumnIndex = targetColumnIndex;
+            this.Description = description;
+        }
     }
 }

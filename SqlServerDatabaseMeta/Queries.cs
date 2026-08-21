@@ -1,10 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace DoenaSoft.SqlServerDatabaseMeta;
 
 /// <summary>
@@ -42,26 +35,48 @@ FROM
     /// <summary>
     /// Columns
     /// </summary>
-    public const string Columns= "select table_name as TableName,\r\n       Column_name as ColumnName,\r\n       ordina" +
-                "l_position as ColumnIndex,\r\n       column_default as DefaultValue,\r\n       CASE\r" +
-                "\n           WHEN SchemaCol.IS_NULLABLE = \'YES\' THEN\r\n               1\r\n         " +
-                "  WHEN SchemaCol.IS_NULLABLE = \'NO\' THEN\r\n               0\r\n           ELSE\r\n   " +
-                "            NULL\r\n       END AS IsNullable,\r\n       Data_type as DataType,\r\n    " +
-                "   numeric_precision as NumericPrecision,\r\n       numeric_scale as NumericScale," +
-                "\r\n       Character_Maximum_length as MaxTextLength,\r\n       collation_name as Te" +
-                "xtCollation,\r\n       itab.IsIdentity as IsIdentity,\r\n       itab.Description as " +
-                "Description,\r\n       itab.ColumnId\r\nfrom INFORMATION_SCHEMA.COLUMNS SchemaCol\r\n " +
-                "   left outer join\r\n    (\r\n        select tab.name as TableName,\r\n              " +
-                " col.name as ColumnName,\r\n               col.is_identity as IsIdentity,\r\n       " +
-                "        col.is_nullable as IsNullable,\r\n               cast(ep.value as varchar)" +
-                " as Description,\r\n               col.column_id as ColumnId\r\n        from sys.col" +
-                "umns col\r\n            inner join sys.tables tab\r\n                on col.object_i" +
-                "d = tab.object_id\r\n            left outer join sys.extended_properties ep\r\n     " +
-                "           on col.object_id = ep.major_id\r\n                   and col.column_id " +
-                "= ep.minor_id\r\n                   and ep.name = \'MS_Description\'\r\n        where " +
-                "tab.type = \'U\'\r\n    ) itab\r\n        on SchemaCol.TABLE_NAME = itab.TableName\r\n  " +
-                "         and SchemaCol.COLUMN_NAME = itab.ColumnName\r\norder by TableName,\r\n     " +
-                "    ColumnIndex";
+    public const string Columns = @"SELECT SchemaCol.table_name AS TableName,
+       SchemaCol.Column_name AS ColumnName,
+       SchemaCol.ordinal_position AS ColumnIndex,
+       SchemaCol.column_default AS DefaultValue,
+       CASE
+           WHEN SchemaCol.IS_NULLABLE = 'YES' THEN
+               1
+           WHEN SchemaCol.IS_NULLABLE = 'NO' THEN
+               0
+           ELSE
+               NULL
+       END AS IsNullable,
+       SchemaCol.Data_type AS DataType,
+       SchemaCol.numeric_precision AS NumericPrecision,
+       SchemaCol.numeric_scale AS NumericScale,
+       SchemaCol.Character_Maximum_length AS MaxTextLength,
+       SchemaCol.collation_name AS TextCollation,
+       itab.IsIdentity AS IsIdentity,
+       itab.Description AS Description,
+       itab.ColumnId
+FROM INFORMATION_SCHEMA.COLUMNS SchemaCol
+    LEFT OUTER JOIN
+    (
+        SELECT tab.name AS TableName,
+               col.name AS ColumnName,
+               col.is_identity AS IsIdentity,
+               col.is_nullable AS IsNullable,
+               CAST(ep.value AS varchar) AS Description,
+               col.column_id AS ColumnId
+        FROM sys.columns col
+            INNER JOIN sys.tables tab
+                ON col.object_id = tab.object_id
+            LEFT OUTER JOIN sys.extended_properties ep
+                ON col.object_id = ep.major_id
+                   AND col.column_id = ep.minor_id
+                   AND ep.name = 'MS_Description'
+        WHERE tab.type = 'U'
+    ) itab
+        ON SchemaCol.TABLE_NAME = itab.TableName
+           AND SchemaCol.COLUMN_NAME = itab.ColumnName
+ORDER BY TableName,
+         ColumnIndex";
 
     /// <summary>
     /// Foreign Keys
@@ -164,6 +179,27 @@ WHERE so.type = 'U'
       AND so.NAME <> 'sysdiagrams'
 Order by TableName,
          IndexId";
+
+    /// <summary>
+    /// Scalar-valued user-defined functions
+    /// </summary>
+    public const string ScalarFunctions = @"SELECT
+    s.name AS SchemaName,
+    o.name AS FunctionName,
+    m.definition AS Definition,
+    CAST(ep.value AS varchar) AS Description
+FROM sys.objects o
+    INNER JOIN sys.schemas s
+        ON s.schema_id = o.schema_id
+    INNER JOIN sys.sql_modules m
+        ON m.object_id = o.object_id
+    LEFT OUTER JOIN sys.extended_properties ep
+        ON ep.major_id = o.object_id
+           AND ep.minor_id = 0
+           AND ep.name = 'MS_Description'
+WHERE o.type = 'FN'
+ORDER BY SchemaName,
+         FunctionName";
 
     /// <summary>
     /// Checks

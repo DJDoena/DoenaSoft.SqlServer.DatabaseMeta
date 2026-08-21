@@ -31,4 +31,29 @@ public interface IMetaReader
     /// <param name="openConnection">open SQL server connection</param>
     /// <returns>the meta information</returns>
     IReadOnlyList<ITableMeta> Read(SqlConnection openConnection);
+
+    /// <summary>
+    /// Opens a SQL server database connection with the given parameters and reads all scalar-valued user-defined functions.
+    /// </summary>
+    /// <param name="server">server name</param>
+    /// <param name="database">database / catalog name</param>
+    /// <param name="user">user name</param>
+    /// <param name="password">password</param>
+    /// <returns>the scalar function meta information</returns>
+    IReadOnlyList<IScalarFunctionMeta> ReadScalarFunctions(string server, string database, string user, string password);
+
+    /// <summary>
+    /// Opens a SQL server database connection with the given <paramref name="connectionString">connection string</paramref> and reads all scalar-valued user-defined functions.
+    /// </summary>
+    /// <param name="connectionString">connection string</param>
+    /// <returns>the scalar function meta information</returns>
+    IReadOnlyList<IScalarFunctionMeta> ReadScalarFunctions(string connectionString);
+
+    /// <summary>
+    /// Uses an already opened database connection and reads all scalar-valued user-defined functions.
+    /// </summary>
+    /// <param name="openConnection">open SQL server connection</param>
+    /// <returns>the scalar function meta information</returns>
+    IReadOnlyList<IScalarFunctionMeta> ReadScalarFunctions(SqlConnection openConnection);
+
 }
